@@ -20,10 +20,11 @@ public class Joueur{
     private int nbPoint;
     private ArrayList<Carte> carteEnMain;
     private int age;
+    private String sexe;
 
 
 
-    public Joueur(String nom, int age, AffichageJoueur joueurUI) {//Constructeur unique de la classe Joueur
+    public Joueur(String nom, int age, String sexe, AffichageJoueur joueurUI) {//Constructeur unique de la classe Joueur
         this.nom = nom;
         this.tour=false;
         this.nbMenhir=0;
@@ -32,6 +33,7 @@ public class Joueur{
         this.carteEnMain = new ArrayList();
         this.age=age;
         this.joueurUI = joueurUI;
+        this.sexe = sexe;
     }
 
 
@@ -39,6 +41,14 @@ public class Joueur{
     public String getNom() {
         return nom;
     } //getter et setter
+
+    public String getSexe() {
+        return sexe;
+    }
+
+    public int getAge() {
+        return age;
+    }
 
     public void setNom(String nom) {
         this.nom = nom;
