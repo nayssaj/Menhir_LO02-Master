@@ -5,7 +5,7 @@ package carte;
  */
 public class Carte {
 
-    //TODO Comprendre le private--Protected
+
     protected String nom;
 
     public Carte(String nom) {

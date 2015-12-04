@@ -141,7 +141,7 @@ public class Joueur{
         this.nbMenhir=0;
     }
 
-    public int obtenirEffetChien(int rang){
+    public int obtenirEffetChien(int saison){
         Iterator<Carte> it =this.carteEnMain.iterator();
         int index=0;
         int i =0;
@@ -150,7 +150,10 @@ public class Joueur{
             if(carte.getNom().equals("Chien de garde")){index=i;}
             i++;
         }
-        return index;
+        CarteAlliees carteChien = (CarteAlliees) carteEnMain.remove(index);
+        int effet[];
+        effet=carteChien.getEffet();
+        return effet[saison];
     }
 
     public String toString(){

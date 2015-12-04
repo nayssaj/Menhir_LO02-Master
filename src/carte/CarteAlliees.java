@@ -52,7 +52,7 @@ public class CarteAlliees extends Carte { //La classe herite de carte
             cible.setNbMenhir(0);
         }
         else{
-            cible.setNbMenhir(-this.effet[saisonInt]);
+            cible.modifierMenhir(-this.effet[saisonInt]);
         }
     }
 }
