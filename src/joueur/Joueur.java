@@ -136,9 +136,9 @@ public class Joueur{
         this.nbMenhir+=quantite;
     }
 
-    public void modifierScore(int point){//Ajoute un certain nombre de point au joueur et remet les menhirs à 0
+    public void modifierScore(){//Ajoute un certain nombre de point au joueur et remet les menhirs à 0
+        this.nbPoint+=this.nbMenhir;
         this.nbMenhir=0;
-        this.nbPoint+=point;
     }
 
     public int obtenirEffetChien(int rang){

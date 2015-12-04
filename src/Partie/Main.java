@@ -7,10 +7,13 @@ package Partie;
 public class Main {
     public static void main (String[] args){
 
-        ConfigurePartie cp = new ConfigurePartie();
-        Partie pt = cp.configurerPartie();
-        pt.lancerPartie();
+        Affichage mainUI = new Affichage();
 
+        do {
+            ConfigurePartie cp = new ConfigurePartie();
+            Partie pt = cp.configurerPartie();
+            pt.lancerPartie();
+        }while(mainUI.reJouer());
 
 
 

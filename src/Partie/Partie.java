@@ -17,15 +17,16 @@ public class Partie {
     private Saison saison;
     private int nbManches;
     private int numManche = 1;
+    private boolean reJouer;
 
 
 
     //Contrôle le déroulement de la partie
     public void lancerPartie() {
-        this.initaliserPartie();
-        this.prochaineSaison();
-        this.jouerSaisons();
-        this.mainUI.gagnant(aGagne());
+            this.initaliserPartie();
+            this.prochaineSaison();
+            this.jouerSaisons();
+            this.mainUI.gagnant(aGagne());
     }
 
     public void jouerSaisons(){
@@ -42,6 +43,12 @@ public class Partie {
             }
             this.prochaineSaison();
         }
+        Iterator<Joueur> itScore = this.getListeJoueur().iterator();
+        while (itScore.hasNext()){
+            Joueur joueurManche = itScore.next();
+            joueurManche.modifierScore();
+            System.out.println(joueurManche.getNbPoint());
+        }
     }
 
     //Attribue a chaque joueur les ressources dont il a besoin
@@ -56,8 +63,7 @@ public class Partie {
             joueur.setNbGraine(2);
         }
 
-        //On mélange et distribue le paquet de cartes ingrédients
-        Collections.shuffle(this.deckIngredient.getPaquetCarte());
+        this.getDeckIngredient().genererPaquetIngredient();
         this.distribuer(this.deckIngredient, nbCarteADistribuer);
     }
 
@@ -108,6 +114,30 @@ public class Partie {
         }
     }
 
+    public ArrayList<Joueur> aGagne(){
+        ArrayList<Joueur> joueursGagants = new ArrayList<Joueur>();
+        joueursGagants.add(this.getListeJoueur().get(0));
+        Iterator<Joueur> itJoueur = this.listeJoueur.iterator();
+        itJoueur.next();//On saute le premier joueur que l'on à déja inclu arbitrairement
+        while(itJoueur.hasNext()){
+            Joueur joueur = itJoueur.next();
+            if(joueursGagants.get(0).getNbPoint() < joueur.getNbPoint()){
+                joueursGagants.clear();
+                joueursGagants.add(joueur);
+            }
+            else if(joueursGagants.get(0).getNbPoint() == joueur.getNbPoint()){
+                if(joueursGagants.get(0).getNbGraine() < joueur.getNbGraine()){
+                    joueursGagants.clear();
+                    joueursGagants.add(joueur);
+                }
+                else if(joueursGagants.get(0).getNbGraine() == joueur.getNbGraine()){
+                    joueursGagants.add(joueur);
+                }
+            }
+        }
+        return joueursGagants;
+    }
+
     //Permet de gérér la condition de fin de partie
     public boolean finPartie(){
         return saison == Saison.FIN_ANNEE;
@@ -153,29 +183,8 @@ public class Partie {
             Joueur joueur = new Joueur(nomJoueur, 18, joueurUI);
             this.getListeJoueur().add(joueur);
         }
-        System.out.println(listeJoueur);
         this.mainUI = mainUI;
         this.deckIngredient = paquet;
         saison = Saison.FIN_ANNEE;
-    }
-
-    public HashSet<Joueur> aGagne(){
-        HashSet<Joueur> joueursGagants = new HashSet<>();
-        joueursGagants.add(this.getListeJoueur().get(0));
-        Iterator<Joueur> itJoueur = this.listeJoueur.iterator();
-        while(itJoueur.hasNext()){
-            Joueur joueur = itJoueur.next();
-            if(this.getListeJoueur().get(0).getNbMenhir() < joueur.getNbMenhir()){
-                joueursGagants.clear();
-                joueursGagants.add(joueur);
-            }
-            else if(this.getListeJoueur().get(0).getNbMenhir() == joueur.getNbMenhir()){
-                    if(this.getListeJoueur().get(0).getNbGraine() <joueur.getNbGraine()){
-                        joueursGagants.clear();
-                        joueursGagants.add(joueur);
-                }
-            }
-        }
-        return joueursGagants;
     }
 }

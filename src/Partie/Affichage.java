@@ -29,10 +29,16 @@ public class Affichage {
        return scJoueur.nextInt();
     }
 
-    public void gagnant(HashSet<Joueur> gagants){
+    public void gagnant(ArrayList<Joueur> gagants){
         Iterator itGagnant = gagants.iterator();
         while (itGagnant.hasNext()){
             System.out.println(itGagnant.next() + " à gagné");
         }
+}
+
+    public boolean reJouer(){
+        System.out.println("Voulez vous refaire une partie ? (TRUE/FALSE)");
+        Scanner scReJouer = new Scanner(System.in);
+        return scReJouer.nextBoolean();
     }
 }

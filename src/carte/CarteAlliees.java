@@ -54,8 +54,5 @@ public class CarteAlliees extends Carte { //La classe herite de carte
         else{
             cible.setNbMenhir(-this.effet[saisonInt]);
         }
-
     }
-
-
 }

@@ -28,9 +28,9 @@ public class PartieAvancee extends Partie{
         this.initaliserPartie();
         repet : for (int i = 0; i <= this.getNbManches(); i++){
             this.prochaineSaison();
-            Iterator itJoueursManche = this.getListeJoueur().iterator();
+            Iterator<Joueur> itJoueursManche = this.getListeJoueur().iterator();
             while (itJoueursManche.hasNext()) {
-                Joueur joueurManche = (Joueur) itJoueursManche.next();
+                Joueur joueurManche = itJoueursManche.next();
                 //TODO modifier pour ce ne soit que le joueur réel qui ait cette option
                 this.donnerGraineOuAllie(joueurManche,joueurManche.getJoueurUI().proposerGrainesOuAllie());
             }
@@ -40,6 +40,7 @@ public class PartieAvancee extends Partie{
                 break repet;
             }
             this.setNumManche(getNumManche()+1);
+            this.nettoyageManche();
         }
         this.getMainUI().gagnant(aGagne());
     }
@@ -64,12 +65,25 @@ public class PartieAvancee extends Partie{
         }
 
         //On mélange et distribue le paquet de cartes ingrédients
-        Collections.shuffle(this.getDeckIngredient().getPaquetCarte());
-        Collections.shuffle(this.getDeckAllie().getPaquetCarte());
+        this.getDeckIngredient().genererPaquetIngredient();
+        this.getDeckAllie().genererPaquetAlliee();
         this.distribuer(this.getDeckIngredient(), nbCarteADistribuer);
     }
 
     public boolean finPartie(){
         return this.getSaison() == Saison.FIN_ANNEE && this.getNumManche() == this.getListeJoueur().size();
+    }
+
+    public void nettoyageManche(){
+
+        int nbCarteADistribuer = 4;
+
+        Iterator<Joueur> itJoueur = getListeJoueur().iterator();
+        while(itJoueur.hasNext()){
+            itJoueur.next().getCarteEnMain().clear();
+        }
+        this.getDeckIngredient().genererPaquetIngredient();
+        this.getDeckAllie().genererPaquetAlliee();
+        this.distribuer(this.getDeckIngredient(), nbCarteADistribuer);
     }
 }

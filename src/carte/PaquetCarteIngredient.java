@@ -1,8 +1,6 @@
 package carte;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by juliengerard on 25/11/2015.
@@ -12,8 +10,12 @@ public class PaquetCarteIngredient extends PaquetCarte {
 
 
     public PaquetCarteIngredient() {
-
         super();
+    }
+
+    public void genererPaquetIngredient(){
+        this.getPaquetCarte().clear();
+
         //On rentre toutes les cartes de manière manuelle dans la base
         String nom = new String("Rayon de lune");
         int[][] effet = new int[][]{{1,1,1,1},{2,0,1,1},{2,0,2,0}};
@@ -112,7 +114,7 @@ public class PaquetCarteIngredient extends PaquetCarte {
         effet = new int[][] {{2,0,1,3},{0,3,0,3},{1,2,2,1}};
         this.paquetCarte.add(new CarteIngredient(nom,effet));
 
-
+        Collections.shuffle(this.getPaquetCarte());
     }
 
 }
