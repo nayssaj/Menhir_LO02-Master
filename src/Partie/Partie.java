@@ -17,7 +17,6 @@ public class Partie {
     private Saison saison;
     private int nbManches;
     private int numManche = 1;
-    private boolean reJouer;
 
 
 
@@ -55,6 +54,8 @@ public class Partie {
     public void initaliserPartie(){
 
         int nbCarteADistribuer = 4;
+
+        this.setOrdreJoueur();
 
         //On donne deux graines a chaque joueur
         Iterator itJoueur = this.listeJoueur.iterator();
@@ -114,7 +115,33 @@ public class Partie {
         }
     }
 
+    public void setOrdreJoueur(){
+        //On sépare les joueurs des joueuses
+        ArrayList<Joueur> joueuses = new  ArrayList<Joueur>();
+        Iterator<Joueur> itJoueur = listeJoueur.iterator();
+        while(itJoueur.hasNext()){
+            Joueur joueur = itJoueur.next();
+            if(joueur.getSexe().equals("F")){
+                joueuses.add(joueur);
+            }
+        }
+        //On recherche le plus jeune joueur parmi les joueuses
+        Iterator itJoueuses = joueuses.iterator();
+        Joueur premierJoueur = (Joueur) itJoueuses.next();
+        while (itJoueuses.hasNext()) {
+            Joueur joueuse = (Joueur) itJoueuses.next();
+            if(joueuse.getAge() < premierJoueur.getAge()){
+                premierJoueur = joueuse;
+            }
+        }
+        //On retire le premier joueur de la liste, on mélange le reste puis on rajoute le premier joueur en première position
+        this.getListeJoueur().remove(premierJoueur);
+        Collections.shuffle(this.getListeJoueur());
+        this.getListeJoueur().add(0, premierJoueur);
+    }
+
     public ArrayList<Joueur> aGagne(){
+        //TODO check fonction max pour collections
         ArrayList<Joueur> joueursGagants = new ArrayList<Joueur>();
         joueursGagants.add(this.getListeJoueur().get(0));
         Iterator<Joueur> itJoueur = this.listeJoueur.iterator();
@@ -180,11 +207,15 @@ public class Partie {
         AffichageJoueur joueurUI = new AffichageJoueur();
         for (int joueurCree = 1; joueurCree <= nbJoueur; joueurCree++){
             String nomJoueur = "Joueur " + joueurCree;
-            Joueur joueur = new Joueur(nomJoueur, 18, joueurUI);
+            int age = mainUI.demanderAge();
+            String sexe = mainUI.demanderSexe();
+            Joueur joueur = new Joueur(nomJoueur, age, sexe, joueurUI);
             this.getListeJoueur().add(joueur);
         }
         this.mainUI = mainUI;
         this.deckIngredient = paquet;
         saison = Saison.FIN_ANNEE;
     }
+
+
 }

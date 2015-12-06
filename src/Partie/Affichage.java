@@ -2,10 +2,7 @@ package Partie;
 
 import joueur.Joueur;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by jglem_000 on 01/12/2015.
@@ -40,5 +37,17 @@ public class Affichage {
         System.out.println("Voulez vous refaire une partie ? (TRUE/FALSE)");
         Scanner scReJouer = new Scanner(System.in);
         return scReJouer.nextBoolean();
+    }
+
+    public int demanderAge(){
+        System.out.println("Quel est votre age ?");
+        Scanner scJoueur = new Scanner(System.in);
+        return scJoueur.nextInt();
+    }
+
+    public String demanderSexe(){
+        System.out.println("Etes-vous un homme ou une femme ? (H/F)");
+        Scanner scPartie = new Scanner(System.in);
+        return scPartie.nextLine();
     }
 }
