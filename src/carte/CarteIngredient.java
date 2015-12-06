@@ -5,7 +5,7 @@ import joueur.Joueur;
 /**
  * Created by juliengerard on 25/11/2015.
  */
-//TODO Relier avec les saisons de Partie.Partie
+
 public class CarteIngredient extends Carte {
 
 
@@ -16,7 +16,7 @@ public class CarteIngredient extends Carte {
     private int[][] effet;
 
 
-
+    //Constructeur de la classe carte ingredient
     public CarteIngredient(String nom, int [][] effet) {
         super(nom);
         this.effet=effet;
@@ -45,19 +45,19 @@ public class CarteIngredient extends Carte {
 
         return sb.toString();
     }
-//TODO gerer les saisons
+
+    //Cette méthode est lancée quand un joueur choisi de joueur un farfadet
     public int actionFarfadet(Joueur attaquant, Joueur cible, boolean chien, Saison saison){
-        int saisonInt = convertirSaisonInt(saison);
-        if(chien){
+        int saisonInt = convertirSaisonInt(saison);//passage d'une saison en int
+        if(chien){//Si le joueur a un chien
             int graineDispo = cible.getNbGraine();
-            int effet = this.effet[FARFADETS][saisonInt]-cible.obtenirEffetChien(saisonInt);
-            if(effet>0) {
+            int effet = this.effet[FARFADETS][saisonInt]-cible.obtenirEffetChien(saisonInt);//On calcule l'effet du chien sur la carte
+            if(effet>0) {//Si le chien ne protège pas tout
                 if (graineDispo >= effet) {
-                    cible.modifierGraine(-effet);
+                    cible.modifierGraine(-effet);//on repercute l'effet sur les joeuurs
                     attaquant.modifierGraine(effet);
                     return effet;
-
-                } else {
+                } else {//Si la cible n'a pas assez de graines on prend ce qu'elle a.
                     cible.setNbGraine(0);
                     attaquant.modifierGraine(graineDispo);
                     return graineDispo;

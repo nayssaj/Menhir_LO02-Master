@@ -7,12 +7,13 @@ import java.util.ArrayList;
 /**
  * Created by juliengerard on 27/11/2015.
  */
-//TODO Relier avec les saisons de partie
-public class CarteAlliees extends Carte { //La classe herite de carte
 
+public class CarteAlliees extends Carte {
 
-    private int[] effet;//QuI va stocker les 4 saisons
+    //Contient l'effet de la carte
+    private int[] effet;
 
+    //Constructeur de la carte alliée qui prend en parametre son nom et son effet
     public CarteAlliees(String nom, int[] effet){
         super(nom);
         this.effet=effet;
@@ -28,6 +29,7 @@ public class CarteAlliees extends Carte { //La classe herite de carte
         this.effet = effet;
     }
 
+    //Convertit le contenu d'une carte en un message affichable sur la console
     public String toString(){
         StringBuffer sb = new StringBuffer();
         sb.append("Nom : ");
@@ -48,7 +50,7 @@ public class CarteAlliees extends Carte { //La classe herite de carte
     public void actionTaupe(Joueur cible,Saison saison){
         int saisonInt = convertirSaisonInt(saison);
         int valeur = cible.getNbMenhir();
-        if((valeur-this.effet[saisonInt])<=0){
+        if((valeur-this.effet[saisonInt])<=0){//Si le joueur cible n'a pas assez de menhir on enleve le max possible pour rester >0
             cible.setNbMenhir(0);
         }
         else{
