@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Created by jglem_000 on 01/12/2015.
  */
-
+//interaction avec les choix de l'utilsiateur
 public class AffichageJoueur {
 
     public Joueur choixCible(ArrayList listeJoueur){

@@ -1,6 +1,6 @@
 package carte;
 
-public enum Saison {
+public enum Saison { //enumeration des saisons utiles a la partie
 
     PRINTEMPS,
     ETE,

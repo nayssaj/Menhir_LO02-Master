@@ -13,7 +13,7 @@ public class PaquetCarteIngredient extends PaquetCarte {
         super();
     }
 
-    public void genererPaquetIngredient(){
+    public void genererPaquetIngredient(){//Vide le paquet existant et génére un nouevau paquet
         this.getPaquetCarte().clear();
 
         //On rentre toutes les cartes de manière manuelle dans la base

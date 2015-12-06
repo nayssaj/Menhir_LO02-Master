@@ -14,7 +14,7 @@ public class PaquetCarteAlliee extends PaquetCarte {
         super();
     }
 
-    public void genererPaquetAlliee() {
+    public void genererPaquetAlliee() { //Vide le paquet existant et génére un nouevau paquet
 
         this.paquetCarte.clear();
 

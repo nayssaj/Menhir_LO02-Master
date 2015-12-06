@@ -13,7 +13,7 @@ public class PaquetCarte {
         paquetCarte = new LinkedList<Carte>();
     }
 
-    protected LinkedList<Carte> paquetCarte;
+    protected LinkedList<Carte> paquetCarte;//Linked list car pas besoin d'acceder a un indice precis
 
     public LinkedList<Carte> getPaquetCarte() {
         return paquetCarte;

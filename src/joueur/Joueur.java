@@ -12,6 +12,8 @@ import java.util.Iterator;
  * Created by juliengerard on 27/11/2015.
  */
 public class Joueur{
+
+
     private AffichageJoueur joueurUI;
     private String nom;
     private boolean tour;
@@ -19,7 +21,7 @@ public class Joueur{
     private int nbGraine;
     private int nbPoint;
     private ArrayList<Carte> carteEnMain;
-    private int age;
+    private int age; //Les deux attributs suivants permettent de determiner si le joueur joue en premier (selon la regle)
     private String sexe;
 
 
@@ -97,6 +99,9 @@ public class Joueur{
     public AffichageJoueur getJoueurUI() {
         return joueurUI;
     }
+
+
+
 
     public Carte choisirCarte (){
         //On choisit une carte

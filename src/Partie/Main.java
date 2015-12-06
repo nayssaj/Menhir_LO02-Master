@@ -11,8 +11,8 @@ public class Main {
 
         do {
             ConfigurePartie cp = new ConfigurePartie();
-            Partie pt = cp.configurerPartie();
-            pt.lancerPartie();
+            Partie pt = cp.configurerPartie();//on configure une partie
+            pt.lancerPartie();//puis on la lance
         }while(mainUI.reJouer());
 
 
