@@ -203,12 +203,10 @@ public class Partie extends Observable{
         return deckIngredient;
     }
 
-    public Partie(PaquetCarteIngredient paquet, int nbJoueur, Affichage mainUI) {
+    public Partie(PaquetCarteIngredient paquet, int nbJoueur, Affichage mainUI, int age, String sexe) {
         listeJoueur = new ArrayList();
         AffichageJoueur joueurUI = new AffichageJoueur();
         String nomJoueurHumain = "Joueur Humain";
-        int age = mainUI.demanderAge();
-        String sexe = mainUI.demanderSexe();
         Joueur joueurHumain = new Joueur(nomJoueurHumain, age, sexe, joueurUI);
         this.getListeJoueur().add(joueurHumain);
         for (int joueurCree = 2; joueurCree <= nbJoueur; joueurCree++){

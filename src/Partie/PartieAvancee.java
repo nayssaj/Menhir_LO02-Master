@@ -15,8 +15,8 @@ public class PartieAvancee extends Partie{
 
 
 
-    public PartieAvancee(PaquetCarteIngredient paquetIngredient, PaquetCarteAlliee paquetAllie, int nbJoueur, Affichage mainUI) {
-        super(paquetIngredient,nbJoueur, mainUI);
+    public PartieAvancee(PaquetCarteIngredient paquetIngredient, PaquetCarteAlliee paquetAllie, int nbJoueur, Affichage mainUI, int ageJoueur, String sexeJoueur) {
+        super(paquetIngredient,nbJoueur, mainUI, ageJoueur, sexeJoueur);
         this.setNbManches(this.getListeJoueur().size());
         this.deckAllie = paquetAllie;
         System.out.println(getNbManches());

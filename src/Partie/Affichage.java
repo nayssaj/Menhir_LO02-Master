@@ -25,16 +25,4 @@ public class Affichage {
         Scanner scReJouer = new Scanner(System.in);
         return scReJouer.nextBoolean();
     }
-
-    public int demanderAge(){
-        System.out.println("Quel est votre age ?");
-        Scanner scJoueur = new Scanner(System.in);
-        return scJoueur.nextInt();
-    }
-
-    public String demanderSexe(){
-        System.out.println("Etes-vous un homme ou une femme ? (H/F)");
-        Scanner scPartie = new Scanner(System.in);
-        return scPartie.nextLine();
-    }
 }
