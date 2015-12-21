@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by juliengerard on 27/11/2015.
  */
 //TODO Relier avec les saisons de partie
-public class CarteAlliees extends Carte { //La classe herite de carte
+public class CarteAlliees extends Carte {
 
 
     private int[] effet;//QuI va stocker les 4 saisons

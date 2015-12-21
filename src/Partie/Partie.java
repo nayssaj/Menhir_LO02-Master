@@ -9,7 +9,7 @@ import carte.*;
 import joueur.*;
 
 
-public class Partie {
+public class Partie extends Observable{
 
     private Affichage mainUI;
     private PaquetCarteIngredient deckIngredient;
@@ -23,6 +23,8 @@ public class Partie {
     //Contrôle le déroulement de la partie
     public void lancerPartie() {
             this.initaliserPartie();
+            this.setChanged();
+            this.notifyObservers("Message");
             this.prochaineSaison();
             this.jouerSaisons();
             this.mainUI.gagnant(aGagne());
@@ -36,8 +38,7 @@ public class Partie {
                 Joueur joueur = (Joueur) itJoueur.next();
                 System.out.println("C'est au tour de " + joueur);
                 joueur.getJoueurUI().infoJoueur(joueur);
-                Carte carte = joueur.choisirCarte();
-                joueur.choisirAction(carte,this.getListeJoueur(),this.saison);
+                joueur.jouerCarte(this);
                 joueur.getJoueurUI().infoJoueur(joueur);
             }
             this.prochaineSaison();
@@ -205,12 +206,15 @@ public class Partie {
     public Partie(PaquetCarteIngredient paquet, int nbJoueur, Affichage mainUI) {
         listeJoueur = new ArrayList();
         AffichageJoueur joueurUI = new AffichageJoueur();
-        for (int joueurCree = 1; joueurCree <= nbJoueur; joueurCree++){
-            String nomJoueur = "Joueur " + joueurCree;
-            int age = mainUI.demanderAge();
-            String sexe = mainUI.demanderSexe();
-            Joueur joueur = new Joueur(nomJoueur, age, sexe, joueurUI);
-            this.getListeJoueur().add(joueur);
+        String nomJoueurHumain = "Joueur Humain";
+        int age = mainUI.demanderAge();
+        String sexe = mainUI.demanderSexe();
+        Joueur joueurHumain = new Joueur(nomJoueurHumain, age, sexe, joueurUI);
+        this.getListeJoueur().add(joueurHumain);
+        for (int joueurCree = 2; joueurCree <= nbJoueur; joueurCree++){
+            String nomJoueurIA = "Joueur " + joueurCree;
+            JoueurVirtuel joueurIA = new JoueurVirtuel(nomJoueurIA, 18, "H", joueurUI);
+            this.getListeJoueur().add(joueurIA);
         }
         this.mainUI = mainUI;
         this.deckIngredient = paquet;

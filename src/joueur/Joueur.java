@@ -1,5 +1,7 @@
 package joueur;
 
+import Partie.*;
+
 import Partie.Affichage;
 import carte.*;
 
@@ -54,14 +56,6 @@ public class Joueur{
         this.nom = nom;
     }
 
-    public boolean isTour() {
-        return tour;
-    }
-
-    public void setTour(boolean tour) {
-        this.tour = tour;
-    }
-
     public int getNbMenhir() {
         return nbMenhir;
     }
@@ -96,6 +90,10 @@ public class Joueur{
 
     public AffichageJoueur getJoueurUI() {
         return joueurUI;
+    }
+
+    public void jouerCarte(Partie partie){
+        choisirAction(choisirCarte(), partie.getListeJoueur(), partie.getSaison());
     }
 
     public Carte choisirCarte (){
@@ -137,6 +135,42 @@ public class Joueur{
         return retour;
     }
 
+    public void jouerTaupe(ArrayList<Joueur> cibles, Saison saison){
+        boolean answer = this.joueurUI.proposerTaupe();
+        Carte carteJouee = null;
+        if(answer){
+            Iterator<Carte> it = this.getCarteEnMain().iterator();
+            while(it.hasNext()){
+                Carte carte = it.next();
+                if(carte.getNom().equals("Taupe geante")){
+                    ((CarteAlliees)carte).actionTaupe(this.getJoueurUI().choixCible(cibles), saison);
+                    carteJouee = carte;
+                }
+            }
+            this.carteEnMain.remove(carteJouee);
+        }
+    }
+
+    public void graineOuAllie(PartieAvancee partie, Joueur joueur){
+        String answer = this.joueurUI.proposerGrainesOuAllie();
+        if(answer.equals("GRAINES")){
+            this.nbGraine = nbGraine + 2;
+        }
+        else{
+            partie.distribuer(this, partie.getDeckAllie(), 1);
+        }
+    }
+
+    public boolean aCarteTaupe(){
+        boolean retour = false;
+        ArrayList<Carte> main = this.getCarteEnMain();
+        Iterator<Carte> it =main.iterator();
+        while(it.hasNext()){
+            Carte carte = (Carte) it.next();
+            if(carte.getNom().equals("Taupe geante")){retour=true;}
+        }
+        return retour;
+    }
 
     public void modifierGraine(int quantite){//Modifie le nombre de graine par ajout d'une quantite
         this.nbGraine+=quantite;

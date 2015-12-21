@@ -8,18 +8,9 @@ public class Main {
     public static void main (String[] args){
 
         Affichage mainUI = new Affichage();
-
-        do {
-            ConfigurePartie cp = new ConfigurePartie();
-            Partie pt = cp.configurerPartie();
-            pt.lancerPartie();
-        }while(mainUI.reJouer());
-
-
-
-
-
-
-
+        VueConfiguration vue;
+        ConfigurePartie cp = new ConfigurePartie();
+        vue = new VueConfiguration(cp);
+        cp.addObserver(vue);
     }
 }
