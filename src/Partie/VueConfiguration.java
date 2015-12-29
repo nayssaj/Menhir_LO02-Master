@@ -1,7 +1,5 @@
 package Partie;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
-
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
@@ -28,7 +26,7 @@ public class VueConfiguration implements Observer{
     private JButton femme;
     private JButton lancerPartie;
     private Container c = fenetre.getContentPane();
-    private Integer[] nbJoueurs = {1, 2, 3, 4, 5, 6};
+    private Integer[] nbJoueurs = {2, 3, 4, 5, 6};
     private JComboBox choixNbJoueurs;
     private JTextField choixAge;
 
@@ -113,6 +111,9 @@ public class VueConfiguration implements Observer{
                 int age = Integer.parseInt(choixAge.getText());
                 config.setAgeJoueur(age);
                 Partie pt = config.configurerPartie();
+                VuePartie vuePartie = new VuePartie(pt);
+                vuePartie.getFenetre().setVisible(true);
+                fenetre.dispose();
                 pt.lancerPartie();
             }
         });
