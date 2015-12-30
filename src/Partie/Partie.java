@@ -12,6 +12,7 @@ import joueur.*;
 public class Partie extends Observable{
 
     private Affichage mainUI;
+    private Joueur joueurHumain;
     private PaquetCarteIngredient deckIngredient;
     private ArrayList<Joueur> listeJoueur;
     private Saison saison;
@@ -179,6 +180,10 @@ public class Partie extends Observable{
         return saison;
     }
 
+    public Joueur getJoueurHumain() {
+        return joueurHumain;
+    }
+
     public int getNbManches() {
         return nbManches;
     }
@@ -207,7 +212,7 @@ public class Partie extends Observable{
         listeJoueur = new ArrayList();
         AffichageJoueur joueurUI = new AffichageJoueur();
         String nomJoueurHumain = "Joueur Humain";
-        Joueur joueurHumain = new Joueur(nomJoueurHumain, age, sexe, joueurUI);
+        joueurHumain = new Joueur(nomJoueurHumain, age, sexe, joueurUI);
         this.getListeJoueur().add(joueurHumain);
         for (int joueurCree = 2; joueurCree <= nbJoueur; joueurCree++){
             String nomJoueurIA = "Joueur " + joueurCree;
