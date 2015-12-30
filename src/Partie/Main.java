@@ -19,7 +19,7 @@ public class Main {
         PaquetCarteIngredient paquet = new PaquetCarteIngredient();
         Partie partie = new Partie(paquet, 4, affich, 15, "F");
         partie.initaliserPartie();
-        partie.getJoueurHumain().getCarteEnMain().get(0).toString();
+        partie.prochaineSaison();
         VuePartie vueTest = new VuePartie(partie);
         vueTest.getFenetre().setVisible(true);
     }
