@@ -17,10 +17,12 @@ public class Main {
         */
         Affichage affich = new Affichage();
         PaquetCarteIngredient paquet = new PaquetCarteIngredient();
-        Partie partie = new Partie(paquet, 4, affich, 15, "F");
+        Partie partie = new Partie(paquet, 5, affich, 15, "F");
         partie.initaliserPartie();
-        partie.prochaineSaison();
         VuePartie vueTest = new VuePartie(partie);
         vueTest.getFenetre().setVisible(true);
+        partie.addObserver(vueTest);
+        partie.getJoueurHumain().addObserver(vueTest);
+        partie.lancerPartie();
     }
 }

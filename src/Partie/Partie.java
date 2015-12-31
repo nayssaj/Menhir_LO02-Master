@@ -23,9 +23,8 @@ public class Partie extends Observable{
 
     //Contrôle le déroulement de la partie
     public void lancerPartie() {
-            this.initaliserPartie();
             this.setChanged();
-            this.notifyObservers("Message");
+            this.notifyObservers("Bienvenue dans le jeu du menhir !\n");
             this.prochaineSaison();
             this.jouerSaisons();
             this.mainUI.gagnant(aGagne());
@@ -37,10 +36,14 @@ public class Partie extends Observable{
             Iterator itJoueur = listeJoueur.iterator();
             while(itJoueur.hasNext()) {
                 Joueur joueur = (Joueur) itJoueur.next();
-                System.out.println("C'est au tour de " + joueur);
-                joueur.getJoueurUI().infoJoueur(joueur);
-                joueur.jouerCarte(this);
-                joueur.getJoueurUI().infoJoueur(joueur);
+                this.setChanged();
+                this.notifyObservers("C'est au tour de " + joueur + "\n");
+                this.setChanged();
+                this.notifyObservers("Choisissez la carte que vous désirez jouer.\n");
+                while(true){
+
+                }
+
             }
             this.prochaineSaison();
         }

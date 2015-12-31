@@ -8,12 +8,13 @@ import carte.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Observable;
 
 
 /**
  * Created by juliengerard on 27/11/2015.
  */
-public class Joueur{
+public class Joueur extends Observable{
     private AffichageJoueur joueurUI;
     private String nom;
     private boolean tour;
@@ -23,6 +24,9 @@ public class Joueur{
     private ArrayList<Carte> carteEnMain;
     private int age;
     private String sexe;
+    private int carteJouée;
+    private String actionEffectuée = null;
+    private Joueur cibleJoueur;
 
 
 
@@ -46,6 +50,15 @@ public class Joueur{
 
     public String getSexe() {
         return sexe;
+    }
+
+    public void setActionEffectuée(String actionEffectuée) {
+        this.actionEffectuée = actionEffectuée;
+    }
+
+    public String getActionEffectuée() {
+
+        return actionEffectuée;
     }
 
     public int getAge() {
@@ -76,12 +89,22 @@ public class Joueur{
         return carteEnMain;
     }
 
+    public void setCibleJoueur(Joueur cibleJoueur) {
+        this.cibleJoueur = cibleJoueur;
+        this.setChanged();
+        this.notifyObservers("La cible est" + cibleJoueur.getNom());
+    }
+
     public void setCarteEnMain(ArrayList<Carte> carteEnMain) {
         this.carteEnMain = carteEnMain;
     }
 
     public int getNbGraine() {
         return nbGraine;
+    }
+
+    public Joueur getCibleJoueur() {
+        return cibleJoueur;
     }
 
     public void setNbGraine(int nbGraine) {
@@ -93,13 +116,15 @@ public class Joueur{
     }
 
     public void jouerCarte(Partie partie){
-        choisirAction(choisirCarte(), partie.getListeJoueur(), partie.getSaison());
+        this.setChanged();
+        this.notifyObservers("Vous effectuez l'action " + actionEffectuée + "de la carte " + carteEnMain.get(carteJouée).getNom());
+        choisirAction(carteEnMain.get(carteJouée), partie.getListeJoueur(), partie.getSaison());
     }
 
-    public Carte choisirCarte (){
+    public void choisirCarte (int place){
         //On choisit une carte
-        int place = joueurUI.choixMain(this);
-        return this.carteEnMain.remove(place);
+        carteJouée = place;
+        carteEnMain.remove(carteJouée);
     }
 
     public void choisirAction (Carte carte, ArrayList<Joueur> joueurs, Saison saison ){
@@ -107,7 +132,7 @@ public class Joueur{
             ((CarteAlliees) carte).actionTaupe(joueurUI.choixCible(joueurs),saison);
         }
         else{
-            switch(joueurUI.choixAction()){
+            switch(actionEffectuée){
                 case "ENGRAIS":
                     joueurUI.infoEngrais(((CarteIngredient) carte).actionEngrais(this,saison));
                     break;
@@ -115,8 +140,7 @@ public class Joueur{
                     joueurUI.infoGeant(((CarteIngredient) carte).actionGeant(this,saison));
                     break;
                 case "FARFADET":
-                    Joueur cible = joueurUI.choixCible(joueurs);
-                    joueurUI.infoFarfadet(((CarteIngredient) carte).actionFarfadet(this,cible,cible.aCarteChien(),saison));
+                    joueurUI.infoFarfadet(((CarteIngredient) carte).actionFarfadet(this,cibleJoueur,cibleJoueur.aCarteChien(),saison));
                     break;
             }
 
