@@ -48,6 +48,10 @@ public class Joueur extends Observable{
         return nom;
     } //getter et setter
 
+    public int getCarteJouée() {
+        return carteJouée;
+    }
+
     public String getSexe() {
         return sexe;
     }
@@ -115,36 +119,34 @@ public class Joueur extends Observable{
         return joueurUI;
     }
 
-    public void jouerCarte(Partie partie){
-        this.setChanged();
-        this.notifyObservers("Vous effectuez l'action " + actionEffectuée + "de la carte " + carteEnMain.get(carteJouée).getNom());
-        choisirAction(carteEnMain.get(carteJouée), partie.getListeJoueur(), partie.getSaison());
-    }
-
     public void choisirCarte (int place){
         //On choisit une carte
         carteJouée = place;
-        carteEnMain.remove(carteJouée);
     }
 
-    public void choisirAction (Carte carte, ArrayList<Joueur> joueurs, Saison saison ){
-        if(carte instanceof CarteAlliees){
-            ((CarteAlliees) carte).actionTaupe(joueurUI.choixCible(joueurs),saison);
+    public void jouerCarte (Partie partie){
+        this.setChanged();
+        this.notifyObservers("Vous effectuez l'action " + actionEffectuée + "de la carte " + carteEnMain.get(carteJouée).getNom());
+        if(this.getCarteEnMain().get(this.getCarteJouée()) instanceof CarteAlliees){
+            ((CarteAlliees) this.getCarteEnMain().get(this.getCarteJouée())).actionTaupe(this.cibleJoueur,partie.getSaison());
         }
         else{
             switch(actionEffectuée){
                 case "ENGRAIS":
-                    joueurUI.infoEngrais(((CarteIngredient) carte).actionEngrais(this,saison));
+                    ((CarteIngredient)this.getCarteEnMain().get(this.getCarteJouée())).actionEngrais(this,partie.getSaison());
                     break;
                 case "GEANT":
-                    joueurUI.infoGeant(((CarteIngredient) carte).actionGeant(this,saison));
+                    ((CarteIngredient) this.getCarteEnMain().get(this.getCarteJouée())).actionGeant(this,partie.getSaison());
                     break;
                 case "FARFADET":
-                    joueurUI.infoFarfadet(((CarteIngredient) carte).actionFarfadet(this,cibleJoueur,cibleJoueur.aCarteChien(),saison));
+                    ((CarteIngredient) this.getCarteEnMain().get(this.getCarteJouée())).actionFarfadet(this,cibleJoueur,cibleJoueur.aCarteChien(),partie.getSaison());
                     break;
             }
 
         }
+        carteEnMain.remove(carteJouée);
+        this.setChanged();
+        this.notifyObservers();
     }
 
 

@@ -20,15 +20,14 @@ public class VuePartie implements Observer{
     private Container contenu;
 
     private JPanel infosJoueursIA;
-    private JLabel nbGraine;
-    private JLabel nbMenhir;
+    private ArrayList<JLabel> grainesJoueurs;
+    private ArrayList<JLabel> menhirsJoueurs;
 
     private JPanel infoMain;
     private JPanel panelNom;
     private JPanel panelGeant;
     private JPanel panelEngrais;
     private JPanel panelFarfadet;
-    private JLabel nomCarte;
     private JLabel effetGeant;
     private JLabel effetEngrais;
     private JLabel effetFarfadet;
@@ -38,7 +37,6 @@ public class VuePartie implements Observer{
     private JButton boutonFarfadet;
 
     private JPanel infoPartie;
-    private JScrollPane scrollPartie;
     private JTextArea deroulementPartie;
     private JPanel panelGraine;
     private JPanel panelMenhir;
@@ -97,6 +95,7 @@ public class VuePartie implements Observer{
                 public void actionPerformed(ActionEvent e) {
                     partie.getJoueurHumain().setActionEffectuée("GEANT");
                     partie.getJoueurHumain().jouerCarte(partie);
+                    actualiserJoueurs();
                 }
             });
             panelGeant.add(boutonGeant);
@@ -110,6 +109,8 @@ public class VuePartie implements Observer{
             boutonEngrais.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     partie.getJoueurHumain().setActionEffectuée("ENGRAIS");
+                    partie.getJoueurHumain().jouerCarte(partie);
+                    actualiserJoueurs();
                 }
             });
             panelEngrais.add(boutonEngrais);
@@ -136,6 +137,7 @@ public class VuePartie implements Observer{
     }
 
     public VuePartie(Partie partie) {
+
         this.partie = partie;
         fenetre.setTitle("VuePartie");
         this.fenetre.setSize(1000,700);
@@ -143,6 +145,7 @@ public class VuePartie implements Observer{
         fenetre.setResizable(false);
         contenu = fenetre.getContentPane();
         bordure = BorderFactory.createLineBorder(Color.black);
+
         infosJoueursIA = new JPanel();
         contenu.setLayout(new GridBagLayout());
         GridBagConstraints gridConstraints = new GridBagConstraints();
@@ -155,6 +158,8 @@ public class VuePartie implements Observer{
         gridConstraints.fill = GridBagConstraints.BOTH;
         contenu.add(infosJoueursIA,gridConstraints);
         infosJoueursIA.setLayout(new GridLayout(5,1));
+        grainesJoueurs = new ArrayList<JLabel>();
+        menhirsJoueurs = new ArrayList<JLabel>();
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
             JPanel joueurIA = new JPanel();
             joueurIA.setBorder(bordure);
@@ -163,8 +168,10 @@ public class VuePartie implements Observer{
             panelNom = new JPanel();
             panelNom.setLayout(new FlowLayout());
             joueurIA.add(panelNom);
-            nbMenhir = new JLabel();
-            nbGraine = new JLabel();
+            JLabel nbMenhir = new JLabel();
+            JLabel nbGraine = new JLabel();
+            grainesJoueurs.add(nbGraine);
+            menhirsJoueurs.add(nbMenhir);
             if(partie.getListeJoueur().get(i) instanceof JoueurVirtuel){
                 int numJoueur = i;
                 JButton nomJoueur = new JButton(partie.getListeJoueur().get(numJoueur).getNom());
@@ -175,6 +182,8 @@ public class VuePartie implements Observer{
                 nomJoueur.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         partie.getJoueurHumain().setCibleJoueur(partie.getListeJoueur().get(numJoueur));
+                        partie.getJoueurHumain().jouerCarte(partie);
+                        actualiserJoueurs();
                     }
                 });
             }
@@ -238,6 +247,13 @@ public class VuePartie implements Observer{
         saison = new JLabel();
         saison.setText("Saison en cours : " + partie.getSaison());
         boxTour.add(saison);
+    }
+
+    public void actualiserJoueurs(){
+        for (int i = 0; i < partie.getListeJoueur().size(); i++){
+                grainesJoueurs.get(i).setText("Graines : " + Integer.toString(partie.getListeJoueur().get(i).getNbGraine()));
+                menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
+        }
     }
 
     public void update(Observable o, Object arg){
