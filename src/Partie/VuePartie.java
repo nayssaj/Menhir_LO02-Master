@@ -49,6 +49,8 @@ public class VuePartie implements Observer{
     private Border bordure;
     private Partie partie;
 
+    private int saisonAffichées;
+
     public JFrame getFenetre() {
         return fenetre;
     }
@@ -91,11 +93,15 @@ public class VuePartie implements Observer{
             panelGeant.setLayout(new FlowLayout());
             effetGeant = new JLabel();
             boutonGeant = new JButton("Géant");
+            //boutonGeant.setEnabled(false);
             boutonGeant.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     partie.getJoueurHumain().setActionEffectuée("GEANT");
                     partie.getJoueurHumain().jouerCarte(partie);
                     actualiserJoueurs();
+                    partie.jouerUneSaison();
+                    actualiserJoueurs();
+                    actualiserSaison();
                 }
             });
             panelGeant.add(boutonGeant);
@@ -111,6 +117,9 @@ public class VuePartie implements Observer{
                     partie.getJoueurHumain().setActionEffectuée("ENGRAIS");
                     partie.getJoueurHumain().jouerCarte(partie);
                     actualiserJoueurs();
+                    partie.jouerUneSaison();
+                    actualiserJoueurs();
+                    actualiserSaison();
                 }
             });
             panelEngrais.add(boutonEngrais);
@@ -183,7 +192,9 @@ public class VuePartie implements Observer{
                     public void actionPerformed(ActionEvent e) {
                         partie.getJoueurHumain().setCibleJoueur(partie.getListeJoueur().get(numJoueur));
                         partie.getJoueurHumain().jouerCarte(partie);
+                        actualiserJoueurs();partie.jouerUneSaison();
                         actualiserJoueurs();
+                        actualiserSaison();
                     }
                 });
             }
@@ -254,6 +265,10 @@ public class VuePartie implements Observer{
                 grainesJoueurs.get(i).setText("Graines : " + Integer.toString(partie.getListeJoueur().get(i).getNbGraine()));
                 menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
         }
+    }
+
+    public void actualiserSaison(){
+       saison.setText(partie.getSaison().toString());
     }
 
     public void update(Observable o, Object arg){

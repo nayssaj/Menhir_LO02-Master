@@ -26,26 +26,25 @@ public class Partie extends Observable{
             this.setChanged();
             this.notifyObservers("Bienvenue dans le jeu du menhir !\n");
             this.prochaineSaison();
-            this.jouerSaisons();
-            this.mainUI.gagnant(aGagne());
+            this.setChanged();
+            this.notifyObservers("C'est à votre tour\n");
+            this.setChanged();
+            this.notifyObservers("Choisissez votre carte\n");
     }
 
     public void jouerSaisons(){
         while (saison != Saison.FIN_ANNEE){
             System.out.println(this.getSaison());
-            Iterator itJoueur = listeJoueur.iterator();
+            Iterator<Joueur> itJoueur = listeJoueur.iterator();
             while(itJoueur.hasNext()) {
-                Joueur joueur = (Joueur) itJoueur.next();
-                this.setChanged();
-                this.notifyObservers("C'est au tour de " + joueur + "\n");
-                this.setChanged();
-                this.notifyObservers("Choisissez la carte que vous désirez jouer.\n");
-                while(true){
-
+                Joueur joueur = itJoueur.next();
+                if(joueur instanceof JoueurVirtuel){
+                    joueur.jouerCarte(this);
+                    this.setChanged();
+                    this.notifyObservers(joueur.getNom() + " effectue l'action " + "\n");
                 }
-
             }
-            this.prochaineSaison();
+            //this.prochaineSaison();
         }
         Iterator<Joueur> itScore = this.getListeJoueur().iterator();
         while (itScore.hasNext()){
@@ -54,6 +53,21 @@ public class Partie extends Observable{
             System.out.println(joueurManche.getNbPoint());
         }
     }
+
+    public void jouerUneSaison(){
+            System.out.println(this.getSaison());
+            Iterator<Joueur> itJoueur = listeJoueur.iterator();
+            while(itJoueur.hasNext()) {
+                Joueur joueur = itJoueur.next();
+                if(joueur instanceof JoueurVirtuel){
+                    joueur.jouerCarte(this);
+                    this.setChanged();
+                    this.notifyObservers(joueur.getNom() + " effectue l'action " + joueur.getActionEffectuée() + "\n");
+                }
+            }
+            this.prochaineSaison();
+    }
+
 
     //Attribue a chaque joueur les ressources dont il a besoin
     public void initaliserPartie(){

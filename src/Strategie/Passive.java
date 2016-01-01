@@ -32,10 +32,12 @@ public class Passive implements StrategieIA {
         }
         //On effectue une action de la carte selon le contexte
         if (joueur.getNbGraine() > 0){
+            joueur.setActionEffectuée("ENGRAIS");
             ((CarteIngredient)carteJouee).actionEngrais(joueur, partie.getSaison());
         }
         else{
             ((CarteIngredient)carteJouee).actionGeant(joueur, partie.getSaison());
+            joueur.setActionEffectuée("GEANT");
         }
         joueur.getCarteEnMain().remove(carteJouee);
     }

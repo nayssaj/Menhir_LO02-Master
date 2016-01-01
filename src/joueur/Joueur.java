@@ -126,7 +126,7 @@ public class Joueur extends Observable{
 
     public void jouerCarte (Partie partie){
         this.setChanged();
-        this.notifyObservers("Vous effectuez l'action " + actionEffectuée + "de la carte " + carteEnMain.get(carteJouée).getNom());
+        this.notifyObservers("Vous effectuez l'action " + actionEffectuée + " de la carte " + carteEnMain.get(carteJouée).getNom());
         if(this.getCarteEnMain().get(this.getCarteJouée()) instanceof CarteAlliees){
             ((CarteAlliees) this.getCarteEnMain().get(this.getCarteJouée())).actionTaupe(this.cibleJoueur,partie.getSaison());
         }

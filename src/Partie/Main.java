@@ -24,5 +24,6 @@ public class Main {
         partie.addObserver(vueTest);
         partie.getJoueurHumain().addObserver(vueTest);
         partie.lancerPartie();
+        vueTest.actualiserSaison();
     }
 }
