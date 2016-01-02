@@ -111,10 +111,13 @@ public class VueConfiguration implements Observer{
                 int age = Integer.parseInt(choixAge.getText());
                 config.setAgeJoueur(age);
                 Partie pt = config.configurerPartie();
+                pt.initaliserPartie();
                 VuePartie vuePartie = new VuePartie(pt);
                 vuePartie.getFenetre().setVisible(true);
+                pt.addObserver(vuePartie);
                 fenetre.dispose();
                 pt.lancerPartie();
+                vuePartie.actualiserSaison();
             }
         });
     }

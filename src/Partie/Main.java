@@ -15,6 +15,7 @@ public class Main {
         vue = new VueConfiguration(cp);
         cp.addObserver(vue);
         */
+
         Affichage affich = new Affichage();
         PaquetCarteIngredient paquet = new PaquetCarteIngredient();
         Partie partie = new Partie(paquet, 5, affich, 15, "F");

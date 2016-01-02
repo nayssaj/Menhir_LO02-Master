@@ -24,15 +24,13 @@ public class VuePartie implements Observer{
     private ArrayList<JLabel> menhirsJoueurs;
 
     private JPanel infoMain;
-    private JPanel panelNom;
-    private JPanel panelGeant;
-    private JPanel panelEngrais;
-    private JPanel panelFarfadet;
+    private JPanel panelNom, panelGeant, panelEngrais, panelFarfadet;
     private JLabel effetGeant;
     private JLabel effetEngrais;
     private JLabel effetFarfadet;
-    private JButton boutonCarte;
-    private JButton boutonGeant;
+    private ArrayList<JButton> nomsCartes;
+    private ArrayList<JButton> boutonsGeant;
+    private ArrayList<JPanel> cartes;
     private JButton boutonEngrais;
     private JButton boutonFarfadet;
 
@@ -49,6 +47,7 @@ public class VuePartie implements Observer{
     private Border bordure;
     private Partie partie;
 
+    private int texteAffiché = 0;
     private int saisonAffichées;
 
     public JFrame getFenetre() {
@@ -72,6 +71,8 @@ public class VuePartie implements Observer{
         //On definit la disposition au sein d'une carte
         for (int i = 0; i < partie.getJoueurHumain().getCarteEnMain().size(); i++){
             JPanel carte = new JPanel();
+            cartes = new ArrayList<>();
+            cartes.add(carte);
             int numCarte = i;
             carte.setBorder(bordure);
             //Chaque carte à une dimension de prédilection
@@ -81,10 +82,14 @@ public class VuePartie implements Observer{
             panelNom = new JPanel();
             panelNom.setLayout(new FlowLayout());
             CarteIngredient carteTest = (CarteIngredient)partie.getJoueurHumain().getCarteEnMain().get(i);
-            boutonCarte = new JButton(carteTest.getNom());
+            nomsCartes = new ArrayList<>();
+            JButton boutonCarte = new JButton(carteTest.getNom());
+            nomsCartes.add(boutonCarte);
+            boutonsGeant = new ArrayList<>();
             boutonCarte.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     partie.getJoueurHumain().choisirCarte(numCarte);
+                    deroulementPartie.append(Integer.toString(cartes.indexOf(carte)));
                 }
             });
             panelNom.add(boutonCarte);
@@ -92,16 +97,25 @@ public class VuePartie implements Observer{
             panelGeant = new JPanel();
             panelGeant.setLayout(new FlowLayout());
             effetGeant = new JLabel();
-            boutonGeant = new JButton("Géant");
-            //boutonGeant.setEnabled(false);
+            JButton boutonGeant = new JButton("Géant");
+            boutonsGeant.add(boutonGeant);
+            boutonGeant.setEnabled(false);
             boutonGeant.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    if (texteAffiché >= 2){
+                        deroulementPartie.setText(null);
+                        texteAffiché = 0;
+                    }
                     partie.getJoueurHumain().setActionEffectuée("GEANT");
                     partie.getJoueurHumain().jouerCarte(partie);
                     actualiserJoueurs();
                     partie.jouerUneSaison();
                     actualiserJoueurs();
                     actualiserSaison();
+                    texteAffiché++;
+                    if(partie.finPartie()){
+                        afficherGagnants();
+                    }
                 }
             });
             panelGeant.add(boutonGeant);
@@ -112,14 +126,23 @@ public class VuePartie implements Observer{
             panelEngrais.setLayout(new FlowLayout());
             effetEngrais = new JLabel();
             boutonEngrais = new JButton("Engrais");
+            boutonEngrais.setEnabled(false);
             boutonEngrais.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    if (texteAffiché >= 2){
+                        deroulementPartie.setText(null);
+                        texteAffiché = 0;
+                    }
                     partie.getJoueurHumain().setActionEffectuée("ENGRAIS");
                     partie.getJoueurHumain().jouerCarte(partie);
                     actualiserJoueurs();
                     partie.jouerUneSaison();
                     actualiserJoueurs();
                     actualiserSaison();
+                    texteAffiché++;
+                    if(partie.finPartie()){
+                        afficherGagnants();
+                    }
                 }
             });
             panelEngrais.add(boutonEngrais);
@@ -130,6 +153,7 @@ public class VuePartie implements Observer{
             panelFarfadet.setLayout(new FlowLayout());
             effetFarfadet = new JLabel();
             boutonFarfadet = new JButton("Farfadet");
+            boutonFarfadet.setEnabled(false);
             boutonFarfadet.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     partie.getJoueurHumain().setActionEffectuée("FARFADET");
@@ -184,17 +208,26 @@ public class VuePartie implements Observer{
             if(partie.getListeJoueur().get(i) instanceof JoueurVirtuel){
                 int numJoueur = i;
                 JButton nomJoueur = new JButton(partie.getListeJoueur().get(numJoueur).getNom());
+                nomJoueur.setEnabled(false);
                 panelNom.add(nomJoueur);
                 Font f = nomJoueur.getFont();
                 nbMenhir.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
                 nbGraine.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
                 nomJoueur.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        if (texteAffiché >= 2){
+                            deroulementPartie.setText(null);
+                            texteAffiché = 0;
+                        }
                         partie.getJoueurHumain().setCibleJoueur(partie.getListeJoueur().get(numJoueur));
                         partie.getJoueurHumain().jouerCarte(partie);
                         actualiserJoueurs();partie.jouerUneSaison();
                         actualiserJoueurs();
                         actualiserSaison();
+                        texteAffiché++;
+                        if(partie.finPartie()){
+                            afficherGagnants();
+                        }
                     }
                 });
             }
@@ -264,6 +297,22 @@ public class VuePartie implements Observer{
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
                 grainesJoueurs.get(i).setText("Graines : " + Integer.toString(partie.getListeJoueur().get(i).getNbGraine()));
                 menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
+        }
+    }
+
+    public void afficherGagnants(){
+        Iterator<Joueur> itScore = partie.getListeJoueur().iterator();
+        while (itScore.hasNext()){
+            Joueur joueurManche = itScore.next();
+            joueurManche.modifierScore();
+            System.out.println(joueurManche.getNbPoint());
+        }
+        deroulementPartie.setText(null);
+        texteAffiché = 0;
+        ArrayList<Joueur> gagnants = partie.aGagne();
+        Iterator<Joueur> itGagnant = gagnants.iterator();
+        while (itGagnant.hasNext()){
+            deroulementPartie.append(itGagnant.next() + " a gagné.\n");
         }
     }
 
