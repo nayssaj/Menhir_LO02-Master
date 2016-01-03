@@ -20,6 +20,7 @@ public class VuePartie implements Observer{
     private Container contenu;
 
     private JPanel infosJoueursIA;
+    private ArrayList boutonsNomJoueurs;
     private ArrayList<JLabel> grainesJoueurs;
     private ArrayList<JLabel> menhirsJoueurs;
 
@@ -29,10 +30,9 @@ public class VuePartie implements Observer{
     private JLabel effetEngrais;
     private JLabel effetFarfadet;
     private ArrayList<JButton> nomsCartes;
-    private ArrayList<JButton> boutonsGeant;
-    private ArrayList<JPanel> cartes;
-    private JButton boutonEngrais;
-    private JButton boutonFarfadet;
+    private ArrayList<JButton> géants;
+    private ArrayList<JButton> engrais;
+    private ArrayList<JButton> farfadets;
 
     private JPanel infoPartie;
     private JTextArea deroulementPartie;
@@ -68,12 +68,14 @@ public class VuePartie implements Observer{
         gridConstraints.weighty = 30;
         infoMain.setLayout(new GridLayout(1,6));
         contenu.add(infoMain,gridConstraints);
+        géants = new ArrayList<>();
+        nomsCartes = new ArrayList<>();
+        farfadets = new ArrayList<>();
+        engrais = new ArrayList<>();
         //On definit la disposition au sein d'une carte
         for (int i = 0; i < partie.getJoueurHumain().getCarteEnMain().size(); i++){
-            JPanel carte = new JPanel();
-            cartes = new ArrayList<>();
-            cartes.add(carte);
             int numCarte = i;
+            JPanel carte = new JPanel();
             carte.setBorder(bordure);
             //Chaque carte à une dimension de prédilection
             carte.setPreferredSize(new Dimension(40,40));
@@ -82,14 +84,19 @@ public class VuePartie implements Observer{
             panelNom = new JPanel();
             panelNom.setLayout(new FlowLayout());
             CarteIngredient carteTest = (CarteIngredient)partie.getJoueurHumain().getCarteEnMain().get(i);
-            nomsCartes = new ArrayList<>();
             JButton boutonCarte = new JButton(carteTest.getNom());
             nomsCartes.add(boutonCarte);
-            boutonsGeant = new ArrayList<>();
             boutonCarte.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    deroulementPartie.append("Choisissez une action\n");
                     partie.getJoueurHumain().choisirCarte(numCarte);
-                    deroulementPartie.append(Integer.toString(cartes.indexOf(carte)));
+                    géants.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                    engrais.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                    farfadets.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                    Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                    while (itNomsCartes.hasNext()){
+                        itNomsCartes.next().setEnabled(false);
+                    }
                 }
             });
             panelNom.add(boutonCarte);
@@ -98,7 +105,7 @@ public class VuePartie implements Observer{
             panelGeant.setLayout(new FlowLayout());
             effetGeant = new JLabel();
             JButton boutonGeant = new JButton("Géant");
-            boutonsGeant.add(boutonGeant);
+            géants.add(boutonGeant);
             boutonGeant.setEnabled(false);
             boutonGeant.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -125,7 +132,8 @@ public class VuePartie implements Observer{
             panelEngrais = new JPanel();
             panelEngrais.setLayout(new FlowLayout());
             effetEngrais = new JLabel();
-            boutonEngrais = new JButton("Engrais");
+            JButton boutonEngrais = new JButton("Engrais");
+            engrais.add(boutonEngrais);
             boutonEngrais.setEnabled(false);
             boutonEngrais.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -152,11 +160,22 @@ public class VuePartie implements Observer{
             panelFarfadet = new JPanel();
             panelFarfadet.setLayout(new FlowLayout());
             effetFarfadet = new JLabel();
-            boutonFarfadet = new JButton("Farfadet");
+            JButton boutonFarfadet = new JButton("Farfadet");
+            farfadets.add(boutonFarfadet);
             boutonFarfadet.setEnabled(false);
             boutonFarfadet.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    deroulementPartie.append("Choisissez une cible\n");
                     partie.getJoueurHumain().setActionEffectuée("FARFADET");
+                    //farfadets.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                    boutonGeant.setEnabled(false);
+                    boutonEngrais.setEnabled(false);
+                    boutonFarfadet.setEnabled(false);
+                    Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
+                    while (itNomsJoueurs.hasNext()){
+                        itNomsJoueurs.next().setEnabled(true);
+                    }
+
                 }
             });
             panelFarfadet.add(boutonFarfadet);
@@ -193,6 +212,7 @@ public class VuePartie implements Observer{
         infosJoueursIA.setLayout(new GridLayout(5,1));
         grainesJoueurs = new ArrayList<JLabel>();
         menhirsJoueurs = new ArrayList<JLabel>();
+        boutonsNomJoueurs = new ArrayList();
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
             JPanel joueurIA = new JPanel();
             joueurIA.setBorder(bordure);
@@ -208,6 +228,7 @@ public class VuePartie implements Observer{
             if(partie.getListeJoueur().get(i) instanceof JoueurVirtuel){
                 int numJoueur = i;
                 JButton nomJoueur = new JButton(partie.getListeJoueur().get(numJoueur).getNom());
+                boutonsNomJoueurs.add(nomJoueur);
                 nomJoueur.setEnabled(false);
                 panelNom.add(nomJoueur);
                 Font f = nomJoueur.getFont();
@@ -221,7 +242,8 @@ public class VuePartie implements Observer{
                         }
                         partie.getJoueurHumain().setCibleJoueur(partie.getListeJoueur().get(numJoueur));
                         partie.getJoueurHumain().jouerCarte(partie);
-                        actualiserJoueurs();partie.jouerUneSaison();
+                        actualiserJoueurs();
+                        partie.jouerUneSaison();
                         actualiserJoueurs();
                         actualiserSaison();
                         texteAffiché++;
@@ -267,7 +289,7 @@ public class VuePartie implements Observer{
         gridConstraints.weightx = 80;
         gridConstraints.weighty = 70;
         contenu.add(infoPartie,gridConstraints);
-        infoPartie.setBackground(Color.YELLOW);
+        infoPartie.setBackground(Color.WHITE);
         infoPartie.setPreferredSize(new Dimension(200,100));
         deroulementPartie.setEditable(false);
         infoPartie.add(deroulementPartie);
@@ -282,7 +304,7 @@ public class VuePartie implements Observer{
         gridConstraints.weighty = 30;
         infoTour.setPreferredSize(new Dimension(35,40));
         contenu.add(infoTour,gridConstraints);
-        infoTour.setBackground(Color.orange);
+        infoTour.setBackground(Color.green);
         boxTour = Box.createVerticalBox();
         infoTour.add(boxTour);
         numManche = new JLabel();
@@ -295,8 +317,12 @@ public class VuePartie implements Observer{
 
     public void actualiserJoueurs(){
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
-                grainesJoueurs.get(i).setText("Graines : " + Integer.toString(partie.getListeJoueur().get(i).getNbGraine()));
-                menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
+            Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
+            while (itNomsJoueurs.hasNext()){
+                itNomsJoueurs.next().setEnabled(false);
+            }
+            grainesJoueurs.get(i).setText("Graines : " + Integer.toString(partie.getListeJoueur().get(i).getNbGraine()));
+            menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
         }
     }
 

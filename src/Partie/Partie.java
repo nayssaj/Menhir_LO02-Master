@@ -23,13 +23,9 @@ public class Partie extends Observable{
 
     //Contrôle le déroulement de la partie
     public void lancerPartie() {
-            this.setChanged();
-            this.notifyObservers("Bienvenue dans le jeu du menhir !\n");
             this.prochaineSaison();
             this.setChanged();
-            this.notifyObservers("C'est à votre tour\n");
-            this.setChanged();
-            this.notifyObservers("Choisissez votre carte\n");
+            this.notifyObservers("C'est à votre tour, Choisissez votre carte\n");
     }
 
     public void jouerSaisons(){
