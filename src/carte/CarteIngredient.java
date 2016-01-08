@@ -2,10 +2,6 @@ package carte;
 
 import joueur.Joueur;
 
-/**
- * Created by juliengerard on 25/11/2015.
- */
-//TODO Relier avec les saisons de Partie.Partie
 public class CarteIngredient extends Carte {
 
 
@@ -49,7 +45,6 @@ public class CarteIngredient extends Carte {
 
         return sb.toString();
     }
-//TODO gerer les saisons
     public int actionFarfadet(Joueur attaquant, Joueur cible, boolean chien, Saison saison){
         int saisonInt = convertirSaisonInt(saison);
         if(chien){

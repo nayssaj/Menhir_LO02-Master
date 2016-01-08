@@ -5,14 +5,10 @@ import Partie.*;
 
 import java.util.*;
 
-/**
- * Created by jglem_000 on 04/12/2015.
- */
 public class Passive implements StrategieIA {
 
     public void choisirCarte(Joueur joueur, Partie partie){
         Iterator<Carte> itCartes = joueur.getCarteEnMain().iterator();
-        System.out.println(joueur.getCarteEnMain());
         Carte carteJouee = joueur.getCarteEnMain().get(0);
         itCartes.next();
         //On selectionne la meilleure carte selon le contexte
@@ -41,8 +37,6 @@ public class Passive implements StrategieIA {
         }
         joueur.getCarteEnMain().remove(carteJouee);
     }
-
-    public void jouerTaupe(ArrayList<Joueur> cibles, Saison saison){};
 
     public void graineOuAllie(PartieAvancee partie, Joueur joueur){
         joueur.setNbGraine(2);

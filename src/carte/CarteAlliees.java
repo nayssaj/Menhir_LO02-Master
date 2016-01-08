@@ -4,10 +4,6 @@ import joueur.Joueur;
 
 import java.util.ArrayList;
 
-/**
- * Created by juliengerard on 27/11/2015.
- */
-//TODO Relier avec les saisons de partie
 public class CarteAlliees extends Carte {
 
 
@@ -22,6 +18,10 @@ public class CarteAlliees extends Carte {
 
     public int[] getEffet() {
         return effet;
+    }
+
+    public int getForce(int i){
+        return this.effet[i];
     }
 
     public void setEffet(int[] effet) {
@@ -52,7 +52,7 @@ public class CarteAlliees extends Carte {
             cible.setNbMenhir(0);
         }
         else{
-            cible.setNbMenhir(-this.effet[saisonInt]);
+            cible.setNbMenhir(cible.getNbMenhir()-this.effet[saisonInt]);
         }
     }
 }

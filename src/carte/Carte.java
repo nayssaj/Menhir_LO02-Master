@@ -1,11 +1,7 @@
 package carte;
 
-/**
- * Created by juliengerard on 25/11/2015.
- */
 public class Carte {
 
-    //TODO Comprendre le private--Protected
     protected String nom;
 
     public Carte(String nom) {

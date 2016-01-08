@@ -2,19 +2,17 @@ package Partie;
 
 import java.util.*;
 
-/**
- * Created by jglem_000 on 27/11/2015.
- */
 import carte.*;
 import joueur.*;
 
 
 public class Partie extends Observable{
 
-    private Affichage mainUI;
     private Joueur joueurHumain;
     private PaquetCarteIngredient deckIngredient;
     private ArrayList<Joueur> listeJoueur;
+    private ArrayList<Joueur> listeJoueurAvantHumain;
+    private ArrayList<Joueur> listeJoueurApresHumain;
     private Saison saison;
     private int nbManches;
     private int numManche = 1;
@@ -23,36 +21,14 @@ public class Partie extends Observable{
 
     //Contrôle le déroulement de la partie
     public void lancerPartie() {
-            this.prochaineSaison();
-            this.setChanged();
-            this.notifyObservers("C'est à votre tour, Choisissez votre carte\n");
+        this.prochaineSaison();
+        this.jouerUneSaison(this.getListeJoueurAvantHumain());
+        this.setChanged();
+        this.notifyObservers("C'est à votre tour, Choisissez votre carte\n");
     }
 
-    public void jouerSaisons(){
-        while (saison != Saison.FIN_ANNEE){
-            System.out.println(this.getSaison());
-            Iterator<Joueur> itJoueur = listeJoueur.iterator();
-            while(itJoueur.hasNext()) {
-                Joueur joueur = itJoueur.next();
-                if(joueur instanceof JoueurVirtuel){
-                    joueur.jouerCarte(this);
-                    this.setChanged();
-                    this.notifyObservers(joueur.getNom() + " effectue l'action " + "\n");
-                }
-            }
-            //this.prochaineSaison();
-        }
-        Iterator<Joueur> itScore = this.getListeJoueur().iterator();
-        while (itScore.hasNext()){
-            Joueur joueurManche = itScore.next();
-            joueurManche.modifierScore();
-            System.out.println(joueurManche.getNbPoint());
-        }
-    }
-
-    public void jouerUneSaison(){
-            System.out.println(this.getSaison());
-            Iterator<Joueur> itJoueur = listeJoueur.iterator();
+    public void jouerUneSaison(ArrayList<Joueur> joueurVirtuels){
+            Iterator<Joueur> itJoueur = joueurVirtuels.iterator();
             while(itJoueur.hasNext()) {
                 Joueur joueur = itJoueur.next();
                 if(joueur instanceof JoueurVirtuel){
@@ -61,7 +37,12 @@ public class Partie extends Observable{
                     this.notifyObservers(joueur.getNom() + " effectue l'action " + joueur.getActionEffectuée() + "\n");
                 }
             }
-            this.prochaineSaison();
+            if(this.getSaison().equals("FIN_ANNEE")){
+                this.numManche++;
+            }
+            if(joueurVirtuels == listeJoueurApresHumain){
+                prochaineSaison();
+            }
     }
 
 
@@ -91,7 +72,6 @@ public class Partie extends Observable{
             Iterator itJoueur = this.listeJoueur.iterator();
             while(itJoueur.hasNext()){
                 Joueur joueur = (Joueur) itJoueur.next();
-                //TODO verifier implémentation classe joueur attribut main
                 joueur.getCarteEnMain().add(paquet.getPaquetCarte().getFirst());
                 paquet.getPaquetCarte().removeFirst();
             }
@@ -103,7 +83,6 @@ public class Partie extends Observable{
     public void distribuer(Joueur joueur, PaquetCarte paquet, int nbCarte){
         int nbDistribue = 0;
         while(nbDistribue < nbCarte){
-            //TODO verifier implémentation classe joueur attribut main
             joueur.getCarteEnMain().add(paquet.getPaquetCarte().getFirst());
             paquet.getPaquetCarte().removeFirst();
             nbDistribue++;
@@ -131,8 +110,12 @@ public class Partie extends Observable{
     }
 
     public void setOrdreJoueur(){
+
+        listeJoueurAvantHumain = new ArrayList<>();
+        listeJoueurApresHumain = new ArrayList<>();
+
         //On sépare les joueurs des joueuses
-        ArrayList<Joueur> joueuses = new  ArrayList<Joueur>();
+        ArrayList<Joueur> joueuses = new  ArrayList<>();
         Iterator<Joueur> itJoueur = listeJoueur.iterator();
         while(itJoueur.hasNext()){
             Joueur joueur = itJoueur.next();
@@ -153,11 +136,18 @@ public class Partie extends Observable{
         this.getListeJoueur().remove(premierJoueur);
         Collections.shuffle(this.getListeJoueur());
         this.getListeJoueur().add(0, premierJoueur);
+        int place;
+        place = this.getListeJoueur().indexOf(joueurHumain);
+        for(int i = 0; i < place; i++){
+            listeJoueurAvantHumain.add(listeJoueur.get(i));
+        }
+        for(int i = place + 1; i < listeJoueur.size(); i++){
+            listeJoueurApresHumain.add(listeJoueur.get(i));
+        }
     }
 
     public ArrayList<Joueur> aGagne(){
-        //TODO check fonction max pour collections
-        ArrayList<Joueur> joueursGagants = new ArrayList<Joueur>();
+        ArrayList<Joueur> joueursGagants = new ArrayList<>();
         joueursGagants.add(this.getListeJoueur().get(0));
         Iterator<Joueur> itJoueur = this.listeJoueur.iterator();
         itJoueur.next();//On saute le premier joueur que l'on à déja inclu arbitrairement
@@ -197,8 +187,13 @@ public class Partie extends Observable{
         return joueurHumain;
     }
 
-    public int getNbManches() {
-        return nbManches;
+    public ArrayList<Joueur> getListeJoueurApresHumain() {
+        return listeJoueurApresHumain;
+    }
+
+    public ArrayList<Joueur> getListeJoueurAvantHumain() {
+
+        return listeJoueurAvantHumain;
     }
 
     public void setNbManches(int nbManches) {
@@ -213,26 +208,20 @@ public class Partie extends Observable{
         this.numManche = numManche;
     }
 
-    public Affichage getMainUI() {
-        return mainUI;
-    }
-
     public PaquetCarteIngredient getDeckIngredient() {
         return deckIngredient;
     }
 
-    public Partie(PaquetCarteIngredient paquet, int nbJoueur, Affichage mainUI, int age, String sexe) {
+    public Partie(PaquetCarteIngredient paquet, int nbJoueur, int age, String sexe) {
         listeJoueur = new ArrayList();
-        AffichageJoueur joueurUI = new AffichageJoueur();
         String nomJoueurHumain = "Joueur Humain";
-        joueurHumain = new Joueur(nomJoueurHumain, age, sexe, joueurUI);
+        joueurHumain = new Joueur(nomJoueurHumain, age, sexe);
         this.getListeJoueur().add(joueurHumain);
         for (int joueurCree = 2; joueurCree <= nbJoueur; joueurCree++){
             String nomJoueurIA = "Joueur " + joueurCree;
-            JoueurVirtuel joueurIA = new JoueurVirtuel(nomJoueurIA, 18, "H", joueurUI);
+            JoueurVirtuel joueurIA = new JoueurVirtuel(nomJoueurIA, 13, "F");
             this.getListeJoueur().add(joueurIA);
         }
-        this.mainUI = mainUI;
         this.deckIngredient = paquet;
         saison = Saison.FIN_ANNEE;
     }

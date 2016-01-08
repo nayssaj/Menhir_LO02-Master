@@ -9,46 +9,35 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
-/**
- * Created by jglem_000 on 21/12/2015.
- */
 public class VuePartie implements Observer{
 
     private JFrame fenetre = new JFrame();
     private Container contenu;
 
     private JPanel infosJoueursIA;
-    private ArrayList boutonsNomJoueurs;
+    private ArrayList<JButton> boutonsNomJoueurs;
     private ArrayList<JLabel> grainesJoueurs;
     private ArrayList<JLabel> menhirsJoueurs;
+    private JPanel panelGraine, panelMenhir;
 
-    private JPanel infoMain;
-    private JPanel panelNom, panelGeant, panelEngrais, panelFarfadet;
-    private JLabel effetGeant;
-    private JLabel effetEngrais;
-    private JLabel effetFarfadet;
-    private ArrayList<JButton> nomsCartes;
-    private ArrayList<JButton> géants;
-    private ArrayList<JButton> engrais;
-    private ArrayList<JButton> farfadets;
+    private JPanel infoMain, panelNom, panelGeant, panelEngrais, panelFarfadet, panelAllie;
+    private JLabel effetGeant, effetEngrais, effetFarfadet, effetAllie;
+    private ArrayList<JButton> nomsCartes, géants, engrais, farfadets;
+    private JButton boutonEffetAllie, boutonNomAllie;
 
     private JPanel infoPartie;
     private JTextArea deroulementPartie;
-    private JPanel panelGraine;
-    private JPanel panelMenhir;
 
-    private JPanel infoTour;
-    private Box boxTour;
-    private JLabel numManche;
-    private JLabel saison;
+    private JPanel infoTour, grainesCartesPanel, panelGrainesCarteQ;
+    private JLabel numManche, saison, grainesOuCartes;
+    private JButton graines,cartes;
 
     private Border bordure;
     private Partie partie;
 
     private int texteAffiché = 0;
-    private int saisonAffichées;
+    private boolean premièreSaison = true;
 
     public JFrame getFenetre() {
         return fenetre;
@@ -66,7 +55,7 @@ public class VuePartie implements Observer{
         gridConstraints.gridheight = GridBagConstraints.REMAINDER;
         gridConstraints.weightx = 80;
         gridConstraints.weighty = 30;
-        infoMain.setLayout(new GridLayout(1,6));
+        infoMain.setLayout(new GridLayout(1,5));
         contenu.add(infoMain,gridConstraints);
         géants = new ArrayList<>();
         nomsCartes = new ArrayList<>();
@@ -79,111 +68,223 @@ public class VuePartie implements Observer{
             carte.setBorder(bordure);
             //Chaque carte à une dimension de prédilection
             carte.setPreferredSize(new Dimension(40,40));
-            //Chaque carte est une grille de 4 lignes et 1 colonne
-            carte.setLayout(new GridLayout(4,1));
             panelNom = new JPanel();
             panelNom.setLayout(new FlowLayout());
-            CarteIngredient carteTest = (CarteIngredient)partie.getJoueurHumain().getCarteEnMain().get(i);
-            JButton boutonCarte = new JButton(carteTest.getNom());
-            nomsCartes.add(boutonCarte);
-            boutonCarte.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    deroulementPartie.append("Choisissez une action\n");
-                    partie.getJoueurHumain().choisirCarte(numCarte);
-                    géants.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
-                    engrais.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
-                    farfadets.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
-                    Iterator<JButton> itNomsCartes = nomsCartes.iterator();
-                    while (itNomsCartes.hasNext()){
-                        itNomsCartes.next().setEnabled(false);
-                    }
+            Carte carteBase = partie.getJoueurHumain().getCarteEnMain().get(i);
+            if (carteBase instanceof CarteIngredient){
+                //Chaque carte est une grille de 4 lignes et 1 colonne
+                carte.setLayout(new GridLayout(4,1));
+                CarteIngredient carteIngredient = (CarteIngredient)carteBase;
+                JButton boutonCarte = new JButton(carteIngredient.getNom());
+                if(partie instanceof PartieAvancee && premièreSaison){
+                    boutonCarte.setEnabled(false);
+                }else{
+                    boutonCarte.setEnabled(true);
                 }
-            });
-            panelNom.add(boutonCarte);
-            carte.add(panelNom);
-            panelGeant = new JPanel();
-            panelGeant.setLayout(new FlowLayout());
-            effetGeant = new JLabel();
-            JButton boutonGeant = new JButton("Géant");
-            géants.add(boutonGeant);
-            boutonGeant.setEnabled(false);
-            boutonGeant.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (texteAffiché >= 2){
-                        deroulementPartie.setText(null);
-                        texteAffiché = 0;
+                nomsCartes.add(boutonCarte);
+                boutonCarte.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        deroulementPartie.append("Choisissez une action\n");
+                        partie.getJoueurHumain().choisirCarte(numCarte);
+                        géants.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                        engrais.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                        farfadets.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
+                        Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                        while (itNomsCartes.hasNext()){
+                            itNomsCartes.next().setEnabled(false);
+                        }
                     }
-                    partie.getJoueurHumain().setActionEffectuée("GEANT");
-                    partie.getJoueurHumain().jouerCarte(partie);
-                    actualiserJoueurs();
-                    partie.jouerUneSaison();
-                    actualiserJoueurs();
-                    actualiserSaison();
-                    texteAffiché++;
-                    if(partie.finPartie()){
-                        afficherGagnants();
+                });
+                panelNom.add(boutonCarte);
+                carte.add(panelNom);
+                panelGeant = new JPanel();
+                panelGeant.setLayout(new FlowLayout());
+                effetGeant = new JLabel();
+                JButton boutonGeant = new JButton("Géant");
+                géants.add(boutonGeant);
+                boutonGeant.setEnabled(false);
+                boutonGeant.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (texteAffiché >= 2){
+                            deroulementPartie.setText(null);
+                            texteAffiché = 0;
+                        }
+                        partie.getJoueurHumain().setActionEffectuée("GEANT");
+                        deroulementPartie.append("Vous effectuez l'action Géant\n");
+                        partie.getJoueurHumain().jouerCarte(partie);
+                        actualiserJoueurs();
+                        partie.jouerUneSaison(partie.getListeJoueurApresHumain());
+                        actualiserJoueurs();
+                        actualiserSaison();
+                        texteAffiché++;
+                        if(partie.finPartie()){
+                            afficherGagnants();
+                            Iterator<JButton> itBoutonsGeant = géants.iterator();
+                            while (itBoutonsGeant.hasNext()){
+                                itBoutonsGeant.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsEngrais = engrais.iterator();
+                            while (itBoutonsEngrais.hasNext()){
+                                itBoutonsEngrais.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsFarfadet = farfadets.iterator();
+                            while (itBoutonsFarfadet.hasNext()){
+                                itBoutonsFarfadet.next().setEnabled(false);
+                            }
+                        }
+                        else if(partie instanceof PartieAvancee && partie.getSaison().toString().equals("FIN_ANNEE")){
+                            nouvelleManche();
+                        }
+                        else{
+                            partie.jouerUneSaison(partie.getListeJoueurAvantHumain());
+                            actualiserJoueurs();
+                            deroulementPartie.append("C'est à votre tour, Choisissez votre carte\n");
+                        }
                     }
+                });
+                panelGeant.add(boutonGeant);
+                effetGeant.setText(Integer.toString(carteIngredient.getForce(0,0)) + " " + Integer.toString(carteIngredient.getForce(0,1)) + " " + Integer.toString(carteIngredient.getForce(0,2)) + " " + Integer.toString(carteIngredient.getForce(0,3)));
+                panelGeant.add(effetGeant);
+                carte.add(panelGeant);
+                panelEngrais = new JPanel();
+                panelEngrais.setLayout(new FlowLayout());
+                effetEngrais = new JLabel();
+                JButton boutonEngrais = new JButton("Engrais");
+                engrais.add(boutonEngrais);
+                boutonEngrais.setEnabled(false);
+                boutonEngrais.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (texteAffiché >= 2){
+                            deroulementPartie.setText(null);
+                            texteAffiché = 0;
+                        }
+                        partie.getJoueurHumain().setActionEffectuée("ENGRAIS");
+                        deroulementPartie.append("Vous effectuez l'action Engrais\n");
+                        partie.getJoueurHumain().jouerCarte(partie);
+                        actualiserJoueurs();
+                        partie.jouerUneSaison(partie.getListeJoueurApresHumain());
+                        actualiserJoueurs();
+                        actualiserSaison();
+                        texteAffiché++;
+                        if(partie.finPartie()){
+                            afficherGagnants();
+                            Iterator<JButton> itBoutonsGeant = géants.iterator();
+                            while (itBoutonsGeant.hasNext()){
+                                itBoutonsGeant.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsEngrais = engrais.iterator();
+                            while (itBoutonsEngrais.hasNext()){
+                                itBoutonsEngrais.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsFarfadet = farfadets.iterator();
+                            while (itBoutonsFarfadet.hasNext()){
+                                itBoutonsFarfadet.next().setEnabled(false);
+                            }
+                        }
+                        else if(partie instanceof PartieAvancee && partie.getSaison().toString().equals("FIN_ANNEE")){
+                            nouvelleManche();
+                        }
+                        else{
+                            partie.jouerUneSaison(partie.getListeJoueurAvantHumain());
+                            actualiserJoueurs();
+                            deroulementPartie.append("C'est à votre tour, Choisissez votre carte\n");
+                        }
+                    }
+                });
+                panelEngrais.add(boutonEngrais);
+                effetEngrais.setText(Integer.toString(carteIngredient.getForce(1,0)) + " " + Integer.toString(carteIngredient.getForce(1,1)) + " " + Integer.toString(carteIngredient.getForce(1,2)) + " " + Integer.toString(carteIngredient.getForce(1,3)));
+                panelEngrais.add(effetEngrais);
+                carte.add(panelEngrais);
+                panelFarfadet = new JPanel();
+                panelFarfadet.setLayout(new FlowLayout());
+                effetFarfadet = new JLabel();
+                JButton boutonFarfadet = new JButton("Farfadet");
+                farfadets.add(boutonFarfadet);
+                boutonFarfadet.setEnabled(false);
+                boutonFarfadet.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        deroulementPartie.append("Choisissez une cible\n");
+                        partie.getJoueurHumain().setActionEffectuée("FARFADET");
+                        boutonGeant.setEnabled(false);
+                        boutonEngrais.setEnabled(false);
+                        boutonFarfadet.setEnabled(false);
+                        Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
+                        while (itNomsJoueurs.hasNext()){
+                            itNomsJoueurs.next().setEnabled(true);
+                        }
+                    }
+                });
+                panelFarfadet.add(boutonFarfadet);
+                effetFarfadet.setText(Integer.toString(carteIngredient.getForce(2,0)) + " " + Integer.toString(carteIngredient.getForce(2,1)) + " " + Integer.toString(carteIngredient.getForce(2,2)) + " " + Integer.toString(carteIngredient.getForce(2,3)));
+                panelFarfadet.add(effetFarfadet);
+                carte.add(panelFarfadet);
+                infoMain.add(carte);
+                deroulementPartie.append("");
+            }
+            //La disposition est différente si c'est une carte alliée
+            if (carteBase instanceof CarteAlliees){
+                //Chaque carte est une grille de 2 lignes et 1 colonne
+                carte.setLayout(new GridLayout(2,1));
+                CarteAlliees carteAllie = (CarteAlliees)carteBase;
+                boutonEffetAllie = new JButton();
+                boutonNomAllie = new JButton(carteAllie.getNom());
+                nomsCartes.add(boutonNomAllie);
+                panelNom.add(boutonNomAllie);
+                carte.add(panelNom);
+                if(partie instanceof PartieAvancee && ((partie.getNumManche() == 1) || (partie.getNumManche()%4 == 0)) && premièreSaison){
+                    boutonNomAllie.setEnabled(false);
+                }else{
+                    boutonNomAllie.setEnabled(true);
                 }
-            });
-            panelGeant.add(boutonGeant);
-            effetGeant.setText(Integer.toString(carteTest.getForce(0,0)) + " " + Integer.toString(carteTest.getForce(0,1)) + " " + Integer.toString(carteTest.getForce(0,2)) + " " + Integer.toString(carteTest.getForce(0,3)));
-            panelGeant.add(effetGeant);
-            carte.add(panelGeant);
-            panelEngrais = new JPanel();
-            panelEngrais.setLayout(new FlowLayout());
-            effetEngrais = new JLabel();
-            JButton boutonEngrais = new JButton("Engrais");
-            engrais.add(boutonEngrais);
-            boutonEngrais.setEnabled(false);
-            boutonEngrais.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (texteAffiché >= 2){
-                        deroulementPartie.setText(null);
-                        texteAffiché = 0;
+                boutonNomAllie.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        deroulementPartie.append("Choisissez une action\n");
+                        partie.getJoueurHumain().choisirCarte(numCarte);
+                        Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                        while (itNomsCartes.hasNext()){
+                            itNomsCartes.next().setEnabled(false);
+                        }
+                        boutonNomAllie.setEnabled(false);
+                        boutonEffetAllie.setEnabled(true);
                     }
-                    partie.getJoueurHumain().setActionEffectuée("ENGRAIS");
-                    partie.getJoueurHumain().jouerCarte(partie);
-                    actualiserJoueurs();
-                    partie.jouerUneSaison();
-                    actualiserJoueurs();
-                    actualiserSaison();
-                    texteAffiché++;
-                    if(partie.finPartie()){
-                        afficherGagnants();
-                    }
+                });
+                panelAllie = new JPanel();
+                panelAllie.setLayout(new FlowLayout());
+                effetAllie = new JLabel();
+                if(carteAllie.getNom().equals("Taupe geante"))
+                {
+                    boutonEffetAllie.setText("Taupe");
+                    boutonEffetAllie.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            deroulementPartie.append("Choisissez une cible\n");
+                            partie.getJoueurHumain().setActionEffectuée("TAUPE");
+                            boutonEffetAllie.setEnabled(false);
+                            Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
+                            while (itNomsJoueurs.hasNext()){
+                                itNomsJoueurs.next().setEnabled(true);
+                            }
+                        }
+                    });
                 }
-            });
-            panelEngrais.add(boutonEngrais);
-            effetEngrais.setText(Integer.toString(carteTest.getForce(1,0)) + " " + Integer.toString(carteTest.getForce(1,1)) + " " + Integer.toString(carteTest.getForce(1,2)) + " " + Integer.toString(carteTest.getForce(1,3)));
-            panelEngrais.add(effetEngrais);
-            carte.add(panelEngrais);
-            panelFarfadet = new JPanel();
-            panelFarfadet.setLayout(new FlowLayout());
-            effetFarfadet = new JLabel();
-            JButton boutonFarfadet = new JButton("Farfadet");
-            farfadets.add(boutonFarfadet);
-            boutonFarfadet.setEnabled(false);
-            boutonFarfadet.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    deroulementPartie.append("Choisissez une cible\n");
-                    partie.getJoueurHumain().setActionEffectuée("FARFADET");
-                    //farfadets.get(nomsCartes.indexOf(boutonCarte)).setEnabled(true);
-                    boutonGeant.setEnabled(false);
-                    boutonEngrais.setEnabled(false);
-                    boutonFarfadet.setEnabled(false);
-                    Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
-                    while (itNomsJoueurs.hasNext()){
-                        itNomsJoueurs.next().setEnabled(true);
-                    }
-
+                else {
+                    boutonEffetAllie.setText("Chien");
+                    boutonEffetAllie.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                            while (itNomsCartes.hasNext()){
+                                itNomsCartes.next().setEnabled(true);
+                            }
+                        }
+                    });
                 }
-            });
-            panelFarfadet.add(boutonFarfadet);
-            effetFarfadet.setText(Integer.toString(carteTest.getForce(2,0)) + " " + Integer.toString(carteTest.getForce(2,1)) + " " + Integer.toString(carteTest.getForce(2,2)) + " " + Integer.toString(carteTest.getForce(2,3)));
-            panelFarfadet.add(effetFarfadet);
-            carte.add(panelFarfadet);
-            infoMain.add(carte);
-            deroulementPartie.append("");
+                boutonEffetAllie.setEnabled(false);
+                panelAllie.add(boutonEffetAllie);
+                carte.add(panelAllie);
+                effetAllie.setText(Integer.toString(carteAllie.getForce(0)) + " " + Integer.toString(carteAllie.getForce(1)) + " " + Integer.toString(carteAllie.getForce(2)) + " " + Integer.toString(carteAllie.getForce(3)));
+                panelAllie.add(effetAllie);
+                infoMain.add(carte);
+                deroulementPartie.append("");
+            }
         }
         deroulementPartie.append("\n ");
     }
@@ -210,8 +311,8 @@ public class VuePartie implements Observer{
         gridConstraints.fill = GridBagConstraints.BOTH;
         contenu.add(infosJoueursIA,gridConstraints);
         infosJoueursIA.setLayout(new GridLayout(5,1));
-        grainesJoueurs = new ArrayList<JLabel>();
-        menhirsJoueurs = new ArrayList<JLabel>();
+        grainesJoueurs = new ArrayList<>();
+        menhirsJoueurs = new ArrayList<>();
         boutonsNomJoueurs = new ArrayList();
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
             JPanel joueurIA = new JPanel();
@@ -243,12 +344,33 @@ public class VuePartie implements Observer{
                         partie.getJoueurHumain().setCibleJoueur(partie.getListeJoueur().get(numJoueur));
                         partie.getJoueurHumain().jouerCarte(partie);
                         actualiserJoueurs();
-                        partie.jouerUneSaison();
+                        deroulementPartie.append("Vous effectuez l'action Farfadet\n");
+                        partie.jouerUneSaison(partie.getListeJoueurApresHumain());
                         actualiserJoueurs();
                         actualiserSaison();
                         texteAffiché++;
                         if(partie.finPartie()){
                             afficherGagnants();
+                            Iterator<JButton> itBoutonsGeant = géants.iterator();
+                            while (itBoutonsGeant.hasNext()){
+                                itBoutonsGeant.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsEngrais = engrais.iterator();
+                            while (itBoutonsEngrais.hasNext()){
+                                itBoutonsEngrais.next().setEnabled(false);
+                            }
+                            Iterator<JButton> itBoutonsFarfadet = farfadets.iterator();
+                            while (itBoutonsFarfadet.hasNext()){
+                                itBoutonsFarfadet.next().setEnabled(false);
+                            }
+                        }
+                        else if(partie instanceof PartieAvancee && partie.getSaison().toString().equals("FIN_ANNEE")){
+                            nouvelleManche();
+                        }
+                        else{
+                            partie.jouerUneSaison(partie.getListeJoueurAvantHumain());
+                            actualiserJoueurs();
+                            deroulementPartie.append("C'est à votre tour, Choisissez votre carte\n");
                         }
                     }
                 });
@@ -305,14 +427,76 @@ public class VuePartie implements Observer{
         infoTour.setPreferredSize(new Dimension(35,40));
         contenu.add(infoTour,gridConstraints);
         infoTour.setBackground(Color.green);
-        boxTour = Box.createVerticalBox();
-        infoTour.add(boxTour);
+        infoTour.setLayout(new GridLayout(6,1));
         numManche = new JLabel();
         numManche.setText("Tour numéro " + partie.getNumManche());
-        boxTour.add(numManche);
+        JPanel panelNumTour = new JPanel();
+        panelNumTour.setLayout(new FlowLayout());
+        panelNumTour.add(numManche);
+        panelNumTour.setBackground(Color.GREEN);
+        infoTour.add(panelNumTour);
         saison = new JLabel();
-        saison.setText("Saison en cours : " + partie.getSaison());
-        boxTour.add(saison);
+        saison.setText(partie.getSaison().toString());
+        infoTour.add(saison);
+        JPanel panelSaison = new JPanel();
+        panelSaison.setLayout(new FlowLayout());
+        panelSaison.add(saison);
+        panelSaison.setBackground(Color.GREEN);
+        infoTour.add(panelSaison);
+        grainesOuCartes = new JLabel();
+        grainesOuCartes.setText("Graines ou carte ?");
+        panelGrainesCarteQ = new JPanel();
+        panelGrainesCarteQ.setLayout(new FlowLayout());
+        panelGrainesCarteQ.add(grainesOuCartes);
+        panelGrainesCarteQ.setBackground(Color.GREEN);
+        infoTour.add(panelGrainesCarteQ);
+        grainesCartesPanel = new JPanel();
+        if(!(partie instanceof PartieAvancee)){
+            grainesCartesPanel.setVisible(false);
+            panelGrainesCarteQ.setVisible(false);
+        }
+        graines = new JButton("Graines");
+        graines.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                partie.getJoueurHumain().setNbGraine(partie.getJoueurHumain().getNbGraine() + 2);
+                actualiserJoueurs();
+                grainesCartesPanel.setVisible(false);
+                panelGrainesCarteQ.setVisible(false);
+                Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                while (itNomsCartes.hasNext()){
+                    itNomsCartes.next().setEnabled(true);
+                }
+                premièreSaison = false;
+                Iterator<Joueur>  itJoueurs= partie.getListeJoueur().iterator();
+                    while (itJoueurs.hasNext()){
+                        Joueur joueur = itJoueurs.next();
+                        if(joueur instanceof JoueurVirtuel){
+                            ((JoueurVirtuel)joueur).graineOuAllie((PartieAvancee)partie, joueur);
+                    }
+                }
+            }
+        });
+        cartes = new JButton("Carte");
+        cartes.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                partie.distribuer(partie.getJoueurHumain(), ((PartieAvancee)partie).getDeckAllie(), 1);
+                remplirMain();
+                actualiserJoueurs();
+                grainesCartesPanel.setVisible(false);
+                panelGrainesCarteQ.setVisible(false);
+                Iterator<JButton> itNomsCartes = nomsCartes.iterator();
+                while (itNomsCartes.hasNext()){
+                    itNomsCartes.next().setEnabled(true);
+                }
+                boutonNomAllie.setEnabled(true);
+                premièreSaison = false;
+            }
+        });
+        grainesCartesPanel.setBackground(Color.GREEN);
+        grainesCartesPanel.setLayout(new FlowLayout());
+        grainesCartesPanel.add(graines);
+        grainesCartesPanel.add(cartes);
+        infoTour.add(grainesCartesPanel);
     }
 
     public void actualiserJoueurs(){
@@ -331,7 +515,6 @@ public class VuePartie implements Observer{
         while (itScore.hasNext()){
             Joueur joueurManche = itScore.next();
             joueurManche.modifierScore();
-            System.out.println(joueurManche.getNbPoint());
         }
         deroulementPartie.setText(null);
         texteAffiché = 0;
@@ -344,10 +527,25 @@ public class VuePartie implements Observer{
 
     public void actualiserSaison(){
        saison.setText(partie.getSaison().toString());
+        numManche.setText("Tour numéro " + partie.getNumManche());
     }
 
     public void update(Observable o, Object arg){
         deroulementPartie.append((String)arg);
         remplirMain();
+    }
+
+    public void nouvelleManche(){
+            premièreSaison = true;
+            partie.prochaineSaison();
+            actualiserSaison();
+            partie.setNumManche(partie.getNumManche()+1);
+            ((PartieAvancee) partie).nettoyageManche();
+            this.actualiserJoueurs();
+            this.remplirMain();
+            grainesCartesPanel.setVisible(true);
+            panelGrainesCarteQ.setVisible(true);
+            partie.jouerUneSaison(partie.getListeJoueurAvantHumain());
+
     }
 }
