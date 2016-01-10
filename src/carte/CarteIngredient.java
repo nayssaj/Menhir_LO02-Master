@@ -22,6 +22,10 @@ public class CarteIngredient extends Carte {
         this.effet=effet;
     }
 
+    public int getForce(int i, int j){
+        return this.effet[i][j];
+    }
+
     public int[][] getEffet() {
         return effet;
     }

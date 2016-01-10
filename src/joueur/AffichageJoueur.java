@@ -35,6 +35,12 @@ public class AffichageJoueur {
         return scPartie.nextLine();
     }
 
+    public boolean proposerTaupe(){
+        System.out.println("Voulez vous jouer une carte taupe ? (TRUE/FALSE)");
+        Scanner sc = new Scanner(System.in);
+        return sc.nextBoolean();
+    }
+
     public void infoJoueur(Joueur joueur){
         System.out.println("Nb graines : "+joueur.getNbGraine()+"\nNb menhir(s) : "+joueur.getNbMenhir());
     }

@@ -13,8 +13,10 @@ public class PartieAvancee extends Partie{
 
     private PaquetCarteAlliee deckAllie;
 
-    public PartieAvancee(PaquetCarteIngredient paquetIngredient, PaquetCarteAlliee paquetAllie, int nbJoueur, Affichage mainUI) {
-        super(paquetIngredient,nbJoueur, mainUI);
+
+
+    public PartieAvancee(PaquetCarteIngredient paquetIngredient, PaquetCarteAlliee paquetAllie, int nbJoueur, Affichage mainUI, int ageJoueur, String sexeJoueur) {
+        super(paquetIngredient,nbJoueur, mainUI, ageJoueur, sexeJoueur);
         this.setNbManches(this.getListeJoueur().size());
         this.deckAllie = paquetAllie;
         System.out.println(getNbManches());
@@ -32,7 +34,7 @@ public class PartieAvancee extends Partie{
             while (itJoueursManche.hasNext()) {
                 Joueur joueurManche = itJoueursManche.next();
                 //TODO modifier pour ce ne soit que le joueur réel qui ait cette option
-                this.donnerGraineOuAllie(joueurManche,joueurManche.getJoueurUI().proposerGrainesOuAllie());
+                joueurManche.graineOuAllie(this, joueurManche);
             }
             this.jouerSaisons();
             if(this.finPartie()){
@@ -45,12 +47,31 @@ public class PartieAvancee extends Partie{
         this.getMainUI().gagnant(aGagne());
     }
 
-    public void donnerGraineOuAllie(Joueur joueur, String answer){
-        if(answer.equals("GRAINES")){
-            joueur.setNbGraine(2);
+    public void jouerSaisons(){
+        while (this.getSaison() != Saison.FIN_ANNEE){
+            System.out.println(this.getSaison());
+            Iterator itJoueur = getListeJoueur().iterator();
+            while(itJoueur.hasNext()) {
+                Joueur joueur = (Joueur) itJoueur.next();
+                System.out.println("C'est au tour de " + joueur);
+                joueur.getJoueurUI().infoJoueur(joueur);
+                joueur.jouerCarte(this);
+                joueur.getJoueurUI().infoJoueur(joueur);
+                Iterator<Joueur> itTaupe = this.getListeJoueur().iterator();
+                while(itTaupe.hasNext()){
+                    Joueur joueurTaupe = itTaupe.next();
+                    if(joueurTaupe.aCarteTaupe()){
+                        joueurTaupe.jouerTaupe(this.getListeJoueur(), this.getSaison());
+                    }
+                }
+            }
+            this.prochaineSaison();
         }
-        else{
-            this.distribuer(joueur, getDeckAllie(), 1);
+        Iterator<Joueur> itScore = this.getListeJoueur().iterator();
+        while (itScore.hasNext()){
+            Joueur joueurManche = itScore.next();
+            joueurManche.modifierScore();
+            System.out.println(joueurManche.getNbPoint());
         }
     }
 
