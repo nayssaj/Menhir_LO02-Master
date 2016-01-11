@@ -1,10 +1,12 @@
 package carte;
 
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 
 /**
- * Created by juliengerard on 27/11/2015.
+ * Classe mere qui represente un paquet de carte
+ * @author Le Mercier - Gerard
+ * @version 1.0
  */
 public class PaquetCarte {
 

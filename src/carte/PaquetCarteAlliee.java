@@ -1,19 +1,30 @@
 package carte;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
-import java.util.Iterator;
 
 /**
- * Created by juliengerard on 27/11/2015.
+ * Classe qui represente le paquet de carte alliee qui herite de PaquetCarte
+ * @author Le Mercier - Gerard
+ * @version 1.0
  */
 public class PaquetCarteAlliee extends PaquetCarte {
 
 
+    /**
+     * Le constructeur de la classe est identique a celui de la classe mere, il genere un paquet vide
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public PaquetCarteAlliee() {
         super();
     }
 
+    /**
+     * La methode remplie le paquet de carte vide et melange le paquet de carte
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void genererPaquetAlliee() { //Vide le paquet existant et génére un nouevau paquet
 
         this.paquetCarte.clear();

@@ -3,16 +3,27 @@ package carte;
 import java.util.*;
 
 /**
- * Created by juliengerard on 25/11/2015.
+ * Classe qui represente le paquet de carte ingredient qui herite de PaquetCarte
+ * @author Le Mercier - Gerard
+ * @version 1.0
  */
 public class PaquetCarteIngredient extends PaquetCarte {
 
 
-
+    /**
+     * Le constructeur de la classe est identique a celui de la classe mere, il genere un paquet vide
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public PaquetCarteIngredient() {
         super();
     }
 
+    /**
+     * La methode remplie le paquet de carte vide et melange le paquet de carte
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void genererPaquetIngredient(){//Vide le paquet existant et génére un nouevau paquet
         this.getPaquetCarte().clear();
 

@@ -2,6 +2,11 @@ package carte;
 
 import joueur.Joueur;
 
+/**
+ * Classe qui represente les cartes ingredients, elle herite de Carte
+ * @author Le Mercier - Gerard
+ * @version 1.0
+ */
 public class CarteIngredient extends Carte {
 
 
@@ -12,24 +17,36 @@ public class CarteIngredient extends Carte {
     private int[][] effet;
 
 
-
+    /**
+     * Constructeur surcharge de la classe CarteIngredient
+     * @param nom Nom de la carte ingredient
+     * @param effet Tableau qui contient les effets de la carte (4 saisons et 3 roles)
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public CarteIngredient(String nom, int [][] effet) {
         super(nom);
         this.effet=effet;
     }
 
+    /**
+     * Getter pour obtenir l'effet d'une carte pour une saison et un role donne
+     * @param i Role de la carte 0 (geant), 1 (engrais), 2 (farfadets)
+     * @param j Saison de la carte entre 0 et 3
+     * @return L'effet de la carte pour la saison et le role donne
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public int getForce(int i, int j){
         return this.effet[i][j];
     }
 
-    public int[][] getEffet() {
-        return effet;
-    }
-
-    public void setEffet(int[][] effet) {
-        this.effet = effet;
-    }
-
+    /**
+     * Méthode qui donne sous forme d'un string les effets de la carte
+     * @return L'effet de la carte  sous la forme d'un String
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public String toString(){
         StringBuffer sb = new StringBuffer();
         sb.append("Nom : ");
@@ -45,6 +62,17 @@ public class CarteIngredient extends Carte {
 
         return sb.toString();
     }
+
+    /**
+     * Methode que gere l'action du farfadet (prendre des graines a un joueur)
+     * @param attaquant Le joueur qui va beneficier du farfadet (Celui qui est porteur de la carte)
+     * @param cible Le joueur qui va subir l'attaque du farfadet
+     * @param chien Le joueur qui subit l'attaque a t'il une carte chien ?
+     * @param saison La saison en cours dans la partie
+     * @return Le nombre de graine(s) retirée(s) au joueur cible
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public int actionFarfadet(Joueur attaquant, Joueur cible, boolean chien, Saison saison){
         int saisonInt = convertirSaisonInt(saison);
         if(chien){
@@ -81,6 +109,14 @@ public class CarteIngredient extends Carte {
         }
     }
 
+    /**
+     * Methode qui gere l'action de l'engrais (transformer des graines en menhir)
+     * @param acteur Le joueur qui pose la carte engrais
+     * @param saison La saison en cours dans la partie
+     * @return Le nombre de graine(s) transformee(s) en menhir
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public int actionEngrais(Joueur acteur,Saison saison){
         int valeur = acteur.getNbGraine();
         int saisonInt = convertirSaisonInt(saison);
@@ -98,6 +134,14 @@ public class CarteIngredient extends Carte {
 
     }
 
+    /**
+     * Methode qui gere l'action du geant (gagner des graines)
+     * @param acteur Le joeuur qui pose la carte geant
+     * @param saison La saison en cours dans la partie
+     * @return Le nombre de graine(s) gagnee(s)
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public int actionGeant(Joueur acteur,Saison saison){
         int saisonInt = convertirSaisonInt(saison);
         acteur.modifierGraine(this.effet[GEANT][saisonInt]);
