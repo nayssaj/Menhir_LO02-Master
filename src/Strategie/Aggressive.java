@@ -5,15 +5,11 @@ import joueur.Joueur;
 
 import java.util.*;
 
-/**
- * Created by jglem_000 on 04/12/2015.
- */
 public class Aggressive implements StrategieIA{
 
     public void choisirCarte(Joueur joueur, Partie partie){
         Joueur meilleureCible = null;
         Iterator<Carte> itCartes = joueur.getCarteEnMain().iterator();
-        System.out.println(joueur.getCarteEnMain());
         Carte carteJouee = joueur.getCarteEnMain().get(0);
         itCartes.next();
         //On selectionne la meilleure carte selon le contexte
@@ -54,15 +50,14 @@ public class Aggressive implements StrategieIA{
         //On effectue une action de la carte selon le contexte
         if (joueur.getNbGraine() > 0){
             ((CarteIngredient)carteJouee).actionEngrais(joueur, partie.getSaison());
+            joueur.setActionEffectuée("Engrais");
         }
         else{
-            System.out.println("Je vole des graines !");
+            joueur.setActionEffectuée("Farfadet");
             ((CarteIngredient)carteJouee).actionFarfadet(joueur, meilleureCible, meilleureCible.aCarteChien(), partie.getSaison());
         }
         joueur.getCarteEnMain().remove(carteJouee);
     }
-
-    public void jouerTaupe(ArrayList<Joueur> cibles, Saison saison){};
 
     public void graineOuAllie(PartieAvancee partie, Joueur joueur){
         joueur.setNbGraine(2);

@@ -2,10 +2,6 @@ package carte;
 
 import joueur.Joueur;
 
-/**
- * Created by juliengerard on 25/11/2015.
- */
-
 public class CarteIngredient extends Carte {
 
 
@@ -16,7 +12,7 @@ public class CarteIngredient extends Carte {
     private int[][] effet;
 
 
-    //Constructeur de la classe carte ingredient
+
     public CarteIngredient(String nom, int [][] effet) {
         super(nom);
         this.effet=effet;
@@ -49,19 +45,18 @@ public class CarteIngredient extends Carte {
 
         return sb.toString();
     }
-
-    //Cette méthode est lancée quand un joueur choisi de joueur un farfadet
     public int actionFarfadet(Joueur attaquant, Joueur cible, boolean chien, Saison saison){
-        int saisonInt = convertirSaisonInt(saison);//passage d'une saison en int
-        if(chien){//Si le joueur a un chien
+        int saisonInt = convertirSaisonInt(saison);
+        if(chien){
             int graineDispo = cible.getNbGraine();
-            int effet = this.effet[FARFADETS][saisonInt]-cible.obtenirEffetChien(saisonInt);//On calcule l'effet du chien sur la carte
-            if(effet>0) {//Si le chien ne protège pas tout
+            int effet = this.effet[FARFADETS][saisonInt]-cible.obtenirEffetChien(saisonInt);
+            if(effet>0) {
                 if (graineDispo >= effet) {
-                    cible.modifierGraine(-effet);//on repercute l'effet sur les joeuurs
+                    cible.modifierGraine(-effet);
                     attaquant.modifierGraine(effet);
                     return effet;
-                } else {//Si la cible n'a pas assez de graines on prend ce qu'elle a.
+
+                } else {
                     cible.setNbGraine(0);
                     attaquant.modifierGraine(graineDispo);
                     return graineDispo;

@@ -4,30 +4,23 @@ import carte.*;
 
 import java.util.*;
 
-
-/**
- * Created by jglem_000 on 28/11/2015.
- */
 public class ConfigurePartie extends Observable {
 
-    private String typePartie;
+    private String typePartie = null;
     private Partie partie;
-    private Affichage mainUI;
     private int nbJoueurs;
-    private int ageJoueur;
-    private String sexeJoueur;
+    private int ageJoueur = -1;
+    private String sexeJoueur = null;
 
     public Partie configurerPartie(){
-        mainUI = new Affichage();
-        mainUI.acceuil();
         if(typePartie.equals("RAPIDE")){
             PaquetCarteIngredient paquetIngredient = new PaquetCarteIngredient();
-            partie = new Partie(paquetIngredient,nbJoueurs, mainUI, ageJoueur, sexeJoueur);
+            partie = new Partie(paquetIngredient,nbJoueurs, ageJoueur, sexeJoueur);
         }
         else{
             PaquetCarteIngredient paquetIngredient = new PaquetCarteIngredient();
             PaquetCarteAlliee paquetAllie = new PaquetCarteAlliee();
-            partie = new PartieAvancee(paquetIngredient, paquetAllie, nbJoueurs, mainUI, ageJoueur, sexeJoueur);
+            partie = new PartieAvancee(paquetIngredient, paquetAllie, nbJoueurs, ageJoueur, sexeJoueur);
 
         }
         return partie;
@@ -51,14 +44,6 @@ public class ConfigurePartie extends Observable {
 
     public String getTypePartie() {
         return typePartie;
-    }
-
-    public int getNbJoueurs() {
-        return nbJoueurs;
-    }
-
-    public int getAgeJoueur() {
-        return ageJoueur;
     }
 
     public String getSexeJoueur() {
