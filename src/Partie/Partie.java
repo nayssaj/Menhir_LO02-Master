@@ -5,7 +5,11 @@ import java.util.*;
 import carte.*;
 import joueur.*;
 
-
+/**
+ * Classe qui gere la partie en cours
+ * @author Le Mercier - Gerard
+ * @version 2.0
+ */
 public class Partie extends Observable{
 
     private Joueur joueurHumain;
@@ -18,8 +22,10 @@ public class Partie extends Observable{
     private int numManche = 1;
 
 
-
-    //Contrôle le déroulement de la partie
+    /**
+     * Contrôle le déroulement de la partie
+     * Contrôle le déroulement de la partie
+     */
     public void lancerPartie() {
         this.prochaineSaison();
         this.jouerUneSaison(this.getListeJoueurAvantHumain());
@@ -27,6 +33,12 @@ public class Partie extends Observable{
         this.notifyObservers("C'est à votre tour, Choisissez votre carte\n");
     }
 
+    /**
+     * Gere un tour de jeu
+     * @param joueurVirtuels La liste des joueurs IA
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void jouerUneSaison(ArrayList<Joueur> joueurVirtuels){
             Iterator<Joueur> itJoueur = joueurVirtuels.iterator();
             while(itJoueur.hasNext()) {
@@ -46,7 +58,11 @@ public class Partie extends Observable{
     }
 
 
-    //Attribue a chaque joueur les ressources dont il a besoin
+    /**
+     * Attribue a chaque joueur les ressources dont il a besoin
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void initaliserPartie(){
 
         int nbCarteADistribuer = 4;
@@ -64,8 +80,14 @@ public class Partie extends Observable{
         this.distribuer(this.deckIngredient, nbCarteADistribuer);
     }
 
-    //Distribution d'un nombre précis de cartes d'un paquet quelconque
-    //La méthode renvoi une exception si elle ne peut pas distribuer un nombre n de carte à CHAQUE joueur
+    /**
+     * Distribution d'un nombre précis de cartes d'un paquet quelconque
+     * La méthode renvoi une exception si elle ne peut pas distribuer un nombre n de carte à CHAQUE joueur
+     * @param paquet Le paquet de carte a distribuer
+     * @param nbCarte le nombre de carte a distribuer
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void distribuer(PaquetCarte paquet, int nbCarte){
         int nbDistribue = 0;
         while(nbDistribue < nbCarte){
@@ -79,7 +101,14 @@ public class Partie extends Observable{
         }
     }
 
-    //Distribution d'un nombre précis de cartes d'un paquet quelconque à un joueur quelconque
+    /**
+     * Distribution d'un nombre précis de cartes d'un paquet quelconque à un joueur quelconque
+     * @param joueur
+     * @param paquet
+     * @param nbCarte
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void distribuer(Joueur joueur, PaquetCarte paquet, int nbCarte){
         int nbDistribue = 0;
         while(nbDistribue < nbCarte){
@@ -89,6 +118,11 @@ public class Partie extends Observable{
         }
     }
 
+    /**
+     * Changement de la saison (passage a la suivante)
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void prochaineSaison(){
         switch(this.saison){
             case PRINTEMPS:
@@ -109,6 +143,11 @@ public class Partie extends Observable{
         }
     }
 
+    /**
+     * Definir l'ordre des joueurs selon l'age et le sexe
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void setOrdreJoueur(){
 
         listeJoueurAvantHumain = new ArrayList<>();
@@ -146,6 +185,12 @@ public class Partie extends Observable{
         }
     }
 
+    /**
+     * Renvoyer un tableau contenant le(s) gagnant(s) de la partie
+     * @return Tableau avec le(s) gagnant(s)
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public ArrayList<Joueur> aGagne(){
         ArrayList<Joueur> joueursGagants = new ArrayList<>();
         joueursGagants.add(this.getListeJoueur().get(0));
@@ -170,48 +215,113 @@ public class Partie extends Observable{
         return joueursGagants;
     }
 
-    //Permet de gérér la condition de fin de partie
+    /**
+     * Permet de gérér la condition de fin de partie
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public boolean finPartie(){
         return saison == Saison.FIN_ANNEE;
     }
 
+    /**
+     * Getter de la liste de joueurs
+     * @return La liste de joueurs
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public ArrayList<Joueur> getListeJoueur() {
         return listeJoueur;
     }
 
+    /**
+     * Getter de la saison actuelle
+     * @return La saison en cours
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public Saison getSaison() {
         return saison;
     }
 
+    /**
+     * Getter du joueur humain de la partie
+     * @return Le joueur humain
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public Joueur getJoueurHumain() {
         return joueurHumain;
     }
 
+    /**
+     * Getter de la liste des IA jouant apres l'humain
+     * @return Une liste de
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public ArrayList<Joueur> getListeJoueurApresHumain() {
         return listeJoueurApresHumain;
     }
 
+    /**
+     * Getter de la liste des IA jouant avant l'humain
+     * @return Une liste de joueurs
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public ArrayList<Joueur> getListeJoueurAvantHumain() {
 
         return listeJoueurAvantHumain;
     }
 
+    /**
+     * Setter du nombre de manches de la partie
+     * @param nbManches dans la partie
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void setNbManches(int nbManches) {
         this.nbManches = nbManches;
     }
 
+    /**
+     * Getter du numero de la manche en cours
+     * @return Le numero de la manche en cours
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public int getNumManche() {
         return numManche;
     }
 
+    /**
+     * Setter du numero de la manche en cours
+     * @param numManche Le numero de la manche a jouer
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void setNumManche(int numManche) {
         this.numManche = numManche;
     }
 
+    /**
+     * Getter pour recuperer le paquet de cartes ingredients
+     * @return Le paquet de cartes ingredients
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public PaquetCarteIngredient getDeckIngredient() {
         return deckIngredient;
     }
 
+    /**
+     * Constructeur de la classe partie
+     * @param paquet Le paquet de carte ingredient a utiliser
+     * @param nbJoueur Le nombre de joueur
+     * @param age L'age du joueur humain
+     * @param sexe Le sexe du joueur humain
+     */
     public Partie(PaquetCarteIngredient paquet, int nbJoueur, int age, String sexe) {
         listeJoueur = new ArrayList();
         String nomJoueurHumain = "Joueur Humain";

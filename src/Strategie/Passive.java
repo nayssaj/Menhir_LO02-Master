@@ -5,8 +5,20 @@ import Partie.*;
 
 import java.util.*;
 
+/**
+ * Classe qui gere la strategie passive
+ * @author Le Mercier - Gerard
+ * @version 1.0
+ */
 public class Passive implements StrategieIA {
 
+    /**
+     * Action de choisir un carte lorsque que la strategie est passive
+     * @param joueur Joueur IA
+     * @param partie Partie en cours
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void choisirCarte(Joueur joueur, Partie partie){
         Iterator<Carte> itCartes = joueur.getCarteEnMain().iterator();
         Carte carteJouee = joueur.getCarteEnMain().get(0);
@@ -38,6 +50,13 @@ public class Passive implements StrategieIA {
         joueur.getCarteEnMain().remove(carteJouee);
     }
 
+    /**
+     * Choix de prendre des graines dans la strategie passive en partie avancee
+     * @param partie Partie en cours
+     * @param joueur Joueur IA
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void graineOuAllie(PartieAvancee partie, Joueur joueur){
         joueur.setNbGraine(2);
     }

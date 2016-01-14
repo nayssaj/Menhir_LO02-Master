@@ -1,3 +1,8 @@
+/**
+ * Package implantant le pattern strategy
+ * @author Le Mercier - Gerard
+ * @version 1.0
+ */
 package Strategie;
 import Partie.*;
 import carte.*;
@@ -5,8 +10,20 @@ import joueur.Joueur;
 
 import java.util.*;
 
+/**
+ * Classe qui gere la strategie aggressive
+ * @author Le Mercier - Gerard
+ * @version 1.0
+ */
 public class Aggressive implements StrategieIA{
 
+    /**
+     * Action de choisir un carte lorsque que la strategie est aggressive
+     * @param joueur Joueur IA
+     * @param partie Partie en cours
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void choisirCarte(Joueur joueur, Partie partie){
         Joueur meilleureCible = null;
         Iterator<Carte> itCartes = joueur.getCarteEnMain().iterator();
@@ -59,6 +76,13 @@ public class Aggressive implements StrategieIA{
         joueur.getCarteEnMain().remove(carteJouee);
     }
 
+    /**
+     * Choix de prendre des graines dans la strategie aggressive en partie avancee
+     * @param partie Partie en cours
+     * @param joueur Joueur IA
+     * @author Le Mercier - Gerard
+     * @version 2.0
+     */
     public void graineOuAllie(PartieAvancee partie, Joueur joueur){
         joueur.setNbGraine(2);
     }

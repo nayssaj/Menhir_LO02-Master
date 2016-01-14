@@ -7,6 +7,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.*;
 
+/**
+ * Classe qui gere la vue de la fenetre de configuration
+ * @author Le Mercier - Gerard
+ * @version 2.0
+ */
 public class VueConfiguration implements Observer{
 
     private JFrame fenetre = new JFrame();
