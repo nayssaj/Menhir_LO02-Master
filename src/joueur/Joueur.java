@@ -268,8 +268,7 @@ public class Joueur extends Observable{
         this.nbPoint+=this.nbMenhir;
         this.nbMenhir=0;
     }
-
-    //TODO C'est impossible que ca marche
+    
     /**
      * Methode qui donne le rang de la carte chien dans la main
      * @param saison L'effet de la carte
