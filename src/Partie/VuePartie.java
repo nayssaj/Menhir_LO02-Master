@@ -12,37 +12,65 @@ import java.util.*;
 
 public class VuePartie implements Observer{
 
+    //Fenêtre principale de la vue de la partie, ainsi que son conteneur
     private JFrame fenetre = new JFrame();
     private Container contenu;
 
+    //Panel contenant toutes les informations sur les joueurs de la partie
     private JPanel infosJoueursIA;
+    //Tableau contenant l'ensemble des boutons sur lesquels les noms des joueurs seront indiqués
     private ArrayList<JButton> boutonsNomJoueurs;
+    //Tableaux contenant l'ensemble des label textes indiquant le nombre de graines et de menhirs de chaque joueurs
     private ArrayList<JLabel> grainesJoueurs;
     private ArrayList<JLabel> menhirsJoueurs;
+    //Panneau dans lequel seront intégrée les labels grainesJoueurs et grainesMenhir
+    //@see grainesJoueurs
     private JPanel panelGraine, panelMenhir;
 
+    //Panels contenant toutes les informations sur les cartes du joueur
     private JPanel infoMain, panelNom, panelGeant, panelEngrais, panelFarfadet, panelAllie;
+    //labels textes contenantrespectivement les valeurs des effets de chaque carte
     private JLabel effetGeant, effetEngrais, effetFarfadet, effetAllie;
+    //Tableaux contenants les boutons sur lesquels sont indiqués les noms des cartes et les actions des cartes
     private ArrayList<JButton> nomsCartes, géants, engrais, farfadets;
+    //Boutons indiquants l'action a effectuer
     private JButton boutonEffetAllie, boutonNomAllie;
 
+    //Panel contenant les infos sur le déroulement de la partie
     private JPanel infoPartie;
+    //Zone de texte contenant les infos sur le déroulement de la partie
     private JTextArea deroulementPartie;
 
+    //Panels contenants des infos générales sur la partie comme la saison en cours
     private JPanel infoTour, grainesCartesPanel, panelGrainesCarteQ;
+    //Labels indiquants respectivement le numéro de la manche, la saison en cours et questionnant le joueur en partie avancée
     private JLabel numManche, saison, grainesOuCartes;
+    //Boutons permettant au joueur de choisir si il souhaite prendre des cartes ou des graines lors de la manche avancée
     private JButton graines,cartes;
 
+    //Objet bordure permettant de séparer visuellement els différents panel
     private Border bordure;
+    //Permet de récuperer les informations sur la partie en cours
     private Partie partie;
 
+    //Attribut permettant de savoir si la zone de texte est entièrmeent remplie et doit être reset
     private int texteAffiché = 0;
+    //Permet de savoir si la saison en cours est la première de la manche afin de proposer au joueur en partie avancée des graines ou une carte
     private boolean premièreSaison = true;
 
+    /**
+    *Getter de la fenetre de la partie
+    *@return Le JFrame Fenêtre de la vue partie
+    */
     public JFrame getFenetre() {
         return fenetre;
     }
 
+    /**
+     * Méthode générant les cartes de la main du joueur, elle parcours les différentes carte sde sa main et crée un objet graphique en conséquence
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void remplirMain(){
         infoMain.removeAll();
         bordure = BorderFactory.createLineBorder(Color.black);
@@ -82,6 +110,12 @@ public class VuePartie implements Observer{
                     boutonCarte.setEnabled(true);
                 }
                 nomsCartes.add(boutonCarte);
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit la carte qu'il va jouer
+                 * @see Joueur
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 boutonCarte.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         deroulementPartie.append("Choisissez une action\n");
@@ -103,6 +137,12 @@ public class VuePartie implements Observer{
                 JButton boutonGeant = new JButton("Géant");
                 géants.add(boutonGeant);
                 boutonGeant.setEnabled(false);
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit l'action qu'il choisi
+                 * @see Carte
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 boutonGeant.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (texteAffiché >= 2){
@@ -152,6 +192,12 @@ public class VuePartie implements Observer{
                 JButton boutonEngrais = new JButton("Engrais");
                 engrais.add(boutonEngrais);
                 boutonEngrais.setEnabled(false);
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit l'action qu'il choisi
+                 * @see Carte
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 boutonEngrais.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (texteAffiché >= 2){
@@ -201,6 +247,12 @@ public class VuePartie implements Observer{
                 JButton boutonFarfadet = new JButton("Farfadet");
                 farfadets.add(boutonFarfadet);
                 boutonFarfadet.setEnabled(false);
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit l'action qu'il choisi
+                 * @see Carte
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 boutonFarfadet.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         deroulementPartie.append("Choisissez une cible\n");
@@ -236,6 +288,12 @@ public class VuePartie implements Observer{
                 }else{
                     boutonNomAllie.setEnabled(true);
                 }
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit l'action qu'il choisi
+                 * @see Carte
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 boutonNomAllie.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         deroulementPartie.append("Choisissez une action\n");
@@ -254,6 +312,12 @@ public class VuePartie implements Observer{
                 if(carteAllie.getNom().equals("Taupe geante"))
                 {
                     boutonEffetAllie.setText("Taupe");
+                    /**
+                     * ActionListener qui après l'utilisation d'un bouton par le joueur définit le joueur qu'il cible
+                     * @see Joueur
+                     * @author Le Mercier - Gerard
+                     * @version 1.0
+                     */
                     boutonEffetAllie.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             deroulementPartie.append("Choisissez une cible\n");
@@ -288,7 +352,12 @@ public class VuePartie implements Observer{
         }
         deroulementPartie.append("\n ");
     }
-
+    /**
+     * Constructeur de la partie, crée l'ensemble des éléments de l'interface
+     * @param partie
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public VuePartie(Partie partie) {
 
         this.partie = partie;
@@ -299,6 +368,7 @@ public class VuePartie implements Observer{
         contenu = fenetre.getContentPane();
         bordure = BorderFactory.createLineBorder(Color.black);
 
+        //Création de la partie supérieure gauche de l'intérface, les infos sur les joueurs de la partie
         infosJoueursIA = new JPanel();
         contenu.setLayout(new GridBagLayout());
         GridBagConstraints gridConstraints = new GridBagConstraints();
@@ -335,6 +405,12 @@ public class VuePartie implements Observer{
                 Font f = nomJoueur.getFont();
                 nbMenhir.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
                 nbGraine.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
+                /**
+                 * ActionListener qui après l'utilisation d'un bouton par le joueur définit le joueur qu'il cible
+                 * @see Joueur
+                 * @author Le Mercier - Gerard
+                 * @version 1.0
+                 */
                 nomJoueur.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (texteAffiché >= 2){
@@ -399,9 +475,11 @@ public class VuePartie implements Observer{
 
         deroulementPartie = new JTextArea();
 
+        //Création de la partie inférieure droite de l'interface, de la main du joueur
         infoMain = new JPanel();
         remplirMain();
 
+        //Création de la partie supérieure droite de l'interface, indiquant le déroulement de la partie
         infoPartie = new JPanel();
         infoPartie.setBorder(bordure);
         gridConstraints.gridx = 1;
@@ -416,6 +494,7 @@ public class VuePartie implements Observer{
         deroulementPartie.setEditable(false);
         infoPartie.add(deroulementPartie);
 
+        //Création de la partie inférieure gauche indiquant les infos sur la saison et le tour en cours
         infoTour = new JPanel();
         infoTour.setBorder(bordure);
         gridConstraints.gridx = 0;
@@ -456,6 +535,11 @@ public class VuePartie implements Observer{
             panelGrainesCarteQ.setVisible(false);
         }
         graines = new JButton("Graines");
+        /**
+         * ActionListener qui après l'utilisation d'un bouton par le joueur définit que celui çi choisi des graines en partie avancée
+         * @author Le Mercier - Gerard
+         * @version 1.0
+         */
         graines.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 partie.getJoueurHumain().setNbGraine(partie.getJoueurHumain().getNbGraine() + 2);
@@ -477,6 +561,11 @@ public class VuePartie implements Observer{
             }
         });
         cartes = new JButton("Carte");
+        /**
+         * ActionListener qui après l'utilisation d'un bouton par le joueur définit que celui çi choisi une carte en partie avancée
+         * @author Le Mercier - Gerard
+         * @version 1.0
+         */
         cartes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 partie.distribuer(partie.getJoueurHumain(), ((PartieAvancee)partie).getDeckAllie(), 1);
@@ -499,6 +588,11 @@ public class VuePartie implements Observer{
         infoTour.add(grainesCartesPanel);
     }
 
+    /**
+     * Rafraichit les valeurs des graines et des menhirs des joueurs dans l'interface
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void actualiserJoueurs(){
         for (int i = 0; i < partie.getListeJoueur().size(); i++){
             Iterator<JButton> itNomsJoueurs = boutonsNomJoueurs.iterator();
@@ -509,7 +603,11 @@ public class VuePartie implements Observer{
             menhirsJoueurs.get(i).setText("Menhir : " + Integer.toString(partie.getListeJoueur().get(i).getNbMenhir()));
         }
     }
-
+    /**
+     * Crée un message de fin en fonction du gagnant
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void afficherGagnants(){
         Iterator<Joueur> itScore = partie.getListeJoueur().iterator();
         while (itScore.hasNext()){
@@ -524,17 +622,29 @@ public class VuePartie implements Observer{
             deroulementPartie.append(itGagnant.next() + " a gagné.\n");
         }
     }
-
+    /**
+     * Actualise les infos liées a la saison en cours
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void actualiserSaison(){
        saison.setText(partie.getSaison().toString());
         numManche.setText("Tour numéro " + partie.getNumManche());
     }
-
+    /**
+     * méthode update du à l'implémentation de l'interface Observer
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void update(Observable o, Object arg){
         deroulementPartie.append((String)arg);
         remplirMain();
     }
-
+    /**
+     * Renouvelle entièrement l'interface au début de chaque nouvelle manche
+     * @author Le Mercier - Gerard
+     * @version 1.0
+     */
     public void nouvelleManche(){
             premièreSaison = true;
             partie.prochaineSaison();
