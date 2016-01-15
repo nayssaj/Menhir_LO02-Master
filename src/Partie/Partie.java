@@ -103,9 +103,9 @@ public class Partie extends Observable{
 
     /**
      * Distribution d'un nombre précis de cartes d'un paquet quelconque à un joueur quelconque
-     * @param joueur
-     * @param paquet
-     * @param nbCarte
+     * @param joueur Le joueur qui recoit les cartes
+     * @param paquet Le paquet dont les cartes sont tirees
+     * @param nbCarte Le nombre de cartes a distribuer
      * @author Le Mercier - Gerard
      * @version 2.0
      */
@@ -217,6 +217,7 @@ public class Partie extends Observable{
 
     /**
      * Permet de gérér la condition de fin de partie
+     * @return Un booleen qui indique si la manche est terminee
      * @author Le Mercier - Gerard
      * @version 2.0
      */

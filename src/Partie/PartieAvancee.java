@@ -21,6 +21,8 @@ public class PartieAvancee extends Partie{
      * @param nbJoueur Le nombre de joueur de la partie
      * @param ageJoueur L'age du joueur humain
      * @param sexeJoueur Le sexe du joueur humain
+     * @author Le Mercier - Gerard
+     * @version 2.0
      */
     public PartieAvancee(PaquetCarteIngredient paquetIngredient, PaquetCarteAlliee paquetAllie, int nbJoueur, int ageJoueur, String sexeJoueur) {
         super(paquetIngredient,nbJoueur, ageJoueur, sexeJoueur);
@@ -31,6 +33,8 @@ public class PartieAvancee extends Partie{
     /**
      * Getter pour obtenir le tas de cartes allies
      * @return Le paquet de cartes allies
+     * @author Le Mercier - Gerard
+     * @version 2.0
      */
     public PaquetCarteAlliee getDeckAllie() {
         return deckAllie;
@@ -38,6 +42,8 @@ public class PartieAvancee extends Partie{
 
     /**
      * Initialise les paquets, le nombre de graines pour chaque joueurs ainsi que distribuer les cartes en debut de parties
+     * @author Le Mercier - Gerard
+     * @version 2.0
      */
     public void initaliserPartie(){
 
@@ -59,7 +65,9 @@ public class PartieAvancee extends Partie{
 
     /**
      * Test si la partie est reelement terminee
-     * @return Un boolean qui indique si c'est la fin de la aprtie
+     * @return Un boolean qui indique si c'est la fin de la partie
+     * @author Le Mercier - Gerard
+     * @version 2.0
      */
     public boolean finPartie(){
         return this.getSaison() == Saison.FIN_ANNEE && this.getNumManche() == this.getListeJoueur().size();
@@ -67,6 +75,8 @@ public class PartieAvancee extends Partie{
 
     /**
      * Methode pour nettoyer les mains en fin de manche
+     * @author Le Mercier - Gerard
+     * @version 2.0
      */
     public void nettoyageManche(){
 

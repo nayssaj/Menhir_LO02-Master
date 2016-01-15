@@ -35,7 +35,7 @@ public class Carte {
 
     /**
      * Méthode qui transforme la saion en un entier compris en 0 (printemps) et 3 (hiver)
-     * @param saison
+     * @param saison La saison qui doit etre convertie
      * @return Un entier qui représente la saison en cours
      * @author Le Mercier - Gerard
      * @version 1.0

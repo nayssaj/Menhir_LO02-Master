@@ -18,7 +18,7 @@ public class JoueurVirtuel extends Joueur {
      * @author Le Mercier - Gerard
      * @version 1.0
      */
-    public void jouerCarte(Partie partie){
+    public void grjouerCarte(Partie partie){
         strategie.choisirCarte(this,partie);
     }
 

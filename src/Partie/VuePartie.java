@@ -354,7 +354,7 @@ public class VuePartie implements Observer{
     }
     /**
      * Constructeur de la partie, crée l'ensemble des éléments de l'interface
-     * @param partie
+     * @param partie La partie en cours
      * @author Le Mercier - Gerard
      * @version 1.0
      */

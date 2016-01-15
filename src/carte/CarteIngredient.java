@@ -42,7 +42,7 @@ public class CarteIngredient extends Carte {
     }
 
     /**
-     * Méthode qui donne sous forme d'un string les effets de la carte
+     * Methode qui donne sous forme d'un string les effets de la carte
      * @return L'effet de la carte  sous la forme d'un String
      * @author Le Mercier - Gerard
      * @version 1.0

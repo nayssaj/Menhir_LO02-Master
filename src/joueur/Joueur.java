@@ -272,7 +272,7 @@ public class Joueur extends Observable{
     //TODO C'est impossible que ca marche
     /**
      * Methode qui donne le rang de la carte chien dans la main
-     * @param rang
+     * @param saison L'effet de la carte
      * @return La valeur de la carte chien pour la saison donnee
      * @author Le Mercier - Gerard
      * @version 1.0
