@@ -277,19 +277,17 @@ public class Joueur extends Observable{
      * @author Le Mercier - Gerard
      * @version 1.0
      */
-    public int obtenirEffetChien(int rang){
+    public int obtenirEffetChien(int saison){
         Iterator<Carte> it = this.carteEnMain.iterator();
-        int index=0;
-        int i =0;
+        int effet = 0;
         while(it.hasNext()){
             Carte carte = it.next();
             if(carte.getNom().equals("Chien de garde")){
-                index=i;
+                effet = ((CarteAlliees)carte).getForce(saison);
                 it.remove();
             }
-            i++;
         }
-        return index;
+        return effet;
     }
 
     /**
